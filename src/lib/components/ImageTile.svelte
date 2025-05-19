@@ -2,12 +2,19 @@
   export let imagePath;
   export let title = '';
   export let altText = title || 'Image';
+  export let className = '';
+  export let aspectRatio = 'portrait'; // 'portrait' (8.5:11) or 'landscape' (3:2)
+  
+  $: paddingBottom = aspectRatio === 'portrait' 
+    ? 'calc(129.41% + 3rem)' // 8.5:11 with padding
+    : 'calc(66.67% + 3rem)';  // 3:2 with padding
 </script>
 
-<div class="image-container">
+<div class="image-container" style="--padding-bottom: {paddingBottom};">
   <img 
     src={imagePath} 
     alt={altText} 
+    class="{className}"
     loading="lazy"
   />
   {#if title}
@@ -21,10 +28,11 @@
   .image-container {
     position: relative;
     width: 100%;
-    padding-bottom: 66.67%; /* 3:2 aspect ratio */
+    padding: 1.5rem 0; /* Top and bottom padding */
+    padding-bottom: var(--padding-bottom, calc(129.41% + 3rem));
     overflow: hidden;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     background: #f5f5f5;
   }

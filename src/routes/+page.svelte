@@ -10,6 +10,7 @@
         imagePath={image.path}
         title={image.title}
         altText={image.alt}
+        aspectRatio="landscape"
       />
     {/each}
   </div>
