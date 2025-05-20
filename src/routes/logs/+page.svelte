@@ -1,6 +1,25 @@
-<script>
+<script lang="ts">
   import ImageTile from '$lib/components/ImageTile.svelte';
   import PanoramicTile from '$lib/components/PanoramicTile.svelte';
+  import { onMount } from 'svelte';
+  
+  let videoWrapper: HTMLDivElement;
+  let videoIframe: HTMLIFrameElement;
+  
+  onMount(() => {
+    if (!videoWrapper || !videoIframe) return;
+    
+    const crop = 150; // 150px total crop (75px top + 75px bottom)
+    const halfCrop = crop / 2;
+    
+    // Update wrapper
+    videoWrapper.style.paddingBottom = `calc(56.25% - ${crop}px)`;
+    videoWrapper.style.margin = `${halfCrop}px 0`;
+    
+    // Update iframe
+    videoIframe.style.top = `-${halfCrop}px`;
+    videoIframe.style.height = `calc(100% + ${crop}px)`;
+  });
   
   const portraitImages = [
     { id: 1, path: '/DSCF7478.jpg', title: '', alt: 'Portrait image 1' },
@@ -17,6 +36,20 @@
 </script>
 
 <div class="gallery">
+  <!-- YouTube Video -->
+  <section class="video-container mb-16">
+    <div class="video-wrapper" bind:this={videoWrapper}>
+      <iframe 
+        bind:this={videoIframe}
+        src="https://www.youtube.com/embed/0YwiDPpI7k8?controls=0&disablekb=1&fs=0&loop=1&modestbranding=1&rel=0&showinfo=0" 
+        title="Sounds of Japan | 4K Cinematic Travel Video" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    </div>
+  </section>
+
   <!-- Portrait Images -->
   <section class="mb-16">
     <div class="image-grid">
@@ -46,7 +79,34 @@
   .gallery {
     max-width: 1800px;
     margin: 0 auto;
-    padding: 2rem 2rem 3rem; /* Increased padding */
+    padding: 2rem 2rem 3rem;
+  }
+
+  .video-container {
+    width: 100%;
+    margin-bottom: 4rem;
+  }
+  
+  .video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    background: #000;
+    border-radius: 12px;
+    margin: 0;
+    transition: all 0.3s ease;
+  }
+
+  .video-wrapper iframe {
+    position: absolute;
+    top: -50px; /* Crop 100px from top (50px from top and bottom) */
+    left: 0;
+    width: 100%;
+    height: calc(100% + 100px); /* Extend height to compensate for crop */
+    border: none;
+    border-radius: 12px;
   }
 
   .image-grid {

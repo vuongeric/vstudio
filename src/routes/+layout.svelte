@@ -68,6 +68,12 @@
   <main>
     <slot />
   </main>
+  
+  <footer class="footer">
+    <div class="footer-content">
+      <p>all media (c) eric vuong</p>
+    </div>
+  </footer>
 </div>
 
 <style>
@@ -97,6 +103,29 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+  }
+
+  .footer {
+    margin-top: auto;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.875rem;
+    color: #666;
+    border-top: 1px solid #eee;
+    background-color: #fff;
+  }
+
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 768px) {
+    .footer {
+      padding: 1rem;
+      font-size: 0.8rem;
+    }
   }
 
   /* Navigation */
@@ -140,11 +169,13 @@
     color: #1a1a1a;
     text-decoration: none;
     font-size: 0.9375rem;
+    font-family: 'Courier New', Courier, monospace;
     font-weight: 500;
     position: relative;
     padding: 0.5rem 0;
     opacity: 0.7;
     transition: opacity 0.2s ease;
+    text-transform: lowercase;
   }
 
   .desktop-nav a:hover,
@@ -230,8 +261,10 @@
   .mobile-menu a {
     padding: 0.75rem 1.5rem;
     color: #4b5563;
+    font-family: 'Courier New', Courier, monospace;
     text-decoration: none;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
+    text-transform: lowercase;
   }
 
   .mobile-menu a:hover,
