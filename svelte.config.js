@@ -12,9 +12,12 @@ const config = {
 		adapter: adapter({
 			// Cloudflare Pages configuration
 			routes: {
-				handle: 'build',
-				files: 'build',
-			},
+				handle: 'filesystem',
+				rules: {
+					// Handle all routes with SvelteKit
+					'/*': { type: 'edge' }
+				}
+			}
 		}),
 		// Enable prerendering for better performance
 		prerender: {
