@@ -74,7 +74,7 @@
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
     color: #222;
-    text-transform: capitalize;
+    text-transform: lowercase;
   }
 
   .description {
