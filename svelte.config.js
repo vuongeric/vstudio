@@ -13,10 +13,9 @@ const config = {
 			// Cloudflare Pages configuration
 			routes: {
 				handle: 'filesystem',
-				// Include all URLs
-				include: ['/*'],
-				// Exclude static assets
-				exclude: ['/_app/immutable/*', '/favicon.png']
+				rules: {
+					'/*': { type: 'edge' }
+				}
 			}
 		}),
 		// Enable prerendering for better performance
