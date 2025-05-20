@@ -1,27 +1,36 @@
-<script>
-  export let imagePath;
+<script lang="ts">
+  import Image from './Image.svelte';
+  
+  export let imagePath: string;
   export let title = '';
   export let altText = title || 'Image';
   export let className = '';
-  export let aspectRatio = 'portrait'; // 'portrait' (8.5:11) or 'landscape' (3:2)
+  export let aspectRatio: 'portrait' | 'landscape' = 'landscape';
   
   $: paddingBottom = aspectRatio === 'portrait' 
     ? 'calc(129.41% + 3rem)' // 8.5:11 with padding
     : 'calc(66.67% + 3rem)';  // 3:2 with padding
+  
+  // Ensure the image path is correctly formatted
+  $: src = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
 </script>
 
 <div class="image-container" style="--padding-bottom: {paddingBottom};">
-  <img 
-    src={imagePath} 
-    alt={altText} 
-    class="{className}"
-    loading="lazy"
-  />
-  {#if title}
-    <div class="image-title">
-      {title}
-    </div>
-  {/if}
+  <div class="image-wrapper">
+    <Image 
+      src={src}
+      alt={altText}
+      width="100%"
+      height="100%"
+      className={className}
+      loading="lazy"
+    />
+    {#if title}
+      <div class="image-title">
+        {title}
+      </div>
+    {/if}
+  </div>
 </div>
 
 <style>
@@ -42,7 +51,19 @@
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
   }
 
-  .image-container img {
+  .image-container:hover :global(.image) {
+    transform: scale(1.02);
+  }
+
+  .image-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .image-container :global(.image) {
     position: absolute;
     top: 0;
     left: 0;
@@ -52,7 +73,7 @@
     transition: transform 0.5s ease;
   }
 
-  .image-container:hover img {
+  .image-container:hover :global(.image) {
     transform: scale(1.03);
   }
 

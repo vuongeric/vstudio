@@ -22,14 +22,14 @@
   });
   
   const portraitImages = [
-    { id: 1, path: '/DSCF7478.jpg', title: '', alt: 'Portrait image 1' },
-    { id: 2, path: '/DSCF7578.jpg', title: '', alt: 'Portrait image 2' },
-    { id: 3, path: '/DSCF7619.jpg', title: '', alt: 'Portrait image 3' }
+    { id: 1, path: 'images/DSCF7478.webp', title: '', alt: 'Portrait image 1' },
+    { id: 2, path: 'images/DSCF7578.webp', title: '', alt: 'Portrait image 2' },
+    { id: 3, path: 'images/DSCF7619.webp', title: '', alt: 'Portrait image 3' }
   ];
   
   const panoImage = { 
     id: 4, 
-    path: '/DSCF6986-Pano.jpg', 
+    path: 'images/DSCF6986-Pano.webp', 
     title: '', 
     alt: 'Panoramic image' 
   };
@@ -56,6 +56,7 @@
       {#each portraitImages as image}
         <ImageTile 
           imagePath={image.path}
+          aspectRatio="portrait"
           title=""
           altText=""
         />

@@ -3,16 +3,17 @@
     <!-- Left Column - Text -->
     <div class="text-column">
       <div class="text-content">
-        <p>exploring cinematography and photography through the lens of japan</p>
+        <p>exploring cinematography and photography through the frames of japan</p>
       </div>
     </div>
     
     <!-- Right Column - Image -->
     <div class="image-column">
       <img 
-        src="/IMG_1925.jpg" 
+        src="/images/IMG_1925.webp" 
         alt="Eric Vuong" 
         class="profile-image"
+        loading="lazy"
       />
     </div>
   </div>
