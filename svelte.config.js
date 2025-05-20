@@ -13,10 +13,10 @@ const config = {
 			// Cloudflare Pages configuration
 			routes: {
 				handle: 'filesystem',
-				rules: {
-					// Handle all routes with SvelteKit
-					'/*': { type: 'edge' }
-				}
+				// Include all URLs
+				include: ['/*'],
+				// Exclude static assets
+				exclude: ['/_app/immutable/*', '/favicon.png']
 			}
 		}),
 		// Enable prerendering for better performance
