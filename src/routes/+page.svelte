@@ -1,6 +1,7 @@
 <script lang="ts">
   import ImageTile from '$lib/components/ImageTile.svelte';
   import PanoramicTile from '$lib/components/PanoramicTile.svelte';
+  import { base } from '$app/paths';
   import { onMount } from 'svelte';
 
   let videoWrapper: HTMLDivElement;
@@ -22,14 +23,14 @@
   });
 
   const portraitImages = [
-    { id: 1, path: 'images/DSCF7478.webp', title: '', alt: 'Portrait image 1' },
-    { id: 2, path: 'images/DSCF7578.webp', title: '', alt: 'Portrait image 2' },
-    { id: 3, path: 'images/DSCF7619.webp', title: '', alt: 'Portrait image 3' }
+    { id: 1, path: `${base}/images/DSCF7478.webp`, title: '', alt: 'Portrait image 1' },
+    { id: 2, path: `${base}/images/DSCF7578.webp`, title: '', alt: 'Portrait image 2' },
+    { id: 3, path: `${base}/images/DSCF7619.webp`, title: '', alt: 'Portrait image 3' }
   ];
 
   const panoImage = {
     id: 4,
-    path: 'images/DSCF6986-Pano.webp',
+    path: `${base}/images/DSCF6986-Pano.webp`,
     title: '',
     alt: 'Panoramic image'
   };
