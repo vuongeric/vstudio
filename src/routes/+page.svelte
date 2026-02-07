@@ -6,6 +6,7 @@
 
   let videoWrapper: HTMLDivElement;
   let videoIframe: HTMLIFrameElement;
+  let hasScrolled = false;
 
   onMount(() => {
     if (!videoWrapper || !videoIframe) return;
@@ -20,6 +21,30 @@
     // Update iframe
     videoIframe.style.top = `-${halfCrop}px`;
     videoIframe.style.height = `calc(100% + ${crop}px)`;
+
+    // Handle scroll to play video with sound
+    const handleScroll = () => {
+      if (hasScrolled) return;
+
+      hasScrolled = true;
+
+      // Update the iframe src to enable autoplay (user interaction allows sound)
+      const currentSrc = videoIframe.src;
+      if (!currentSrc.includes('autoplay=1')) {
+        const newSrc = currentSrc.includes('?')
+          ? currentSrc + '&autoplay=1'
+          : currentSrc + '?autoplay=1';
+        videoIframe.src = newSrc;
+      }
+
+      window.removeEventListener('scroll', handleScroll);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   });
 
   const portraitImages = [
