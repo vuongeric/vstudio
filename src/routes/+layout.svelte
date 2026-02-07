@@ -1,11 +1,12 @@
 <script>
   import { page } from '$app/stores';
+  import { base } from '$app/paths';
   import { onMount } from 'svelte';
-  
+
   let mobileMenuOpen = false;
   const navItems = [
-    { name: 'Portfolio', href: '/' },
-    { name: 'Kit', href: '/kit' }
+    { name: 'Portfolio', href: `${base}/` },
+    { name: 'Kit', href: `${base}/kit` }
   ];
 
   $: currentPath = $page.url.pathname;
@@ -19,7 +20,7 @@
 <div class="app">
   <nav class="nav">
     <div class="nav-container">
-      <a href="/" class="logo">eric vuong</a>
+      <a href={`${base}/`} class="logo">eric vuong</a>
       
       <!-- Desktop Navigation -->
       <div class="desktop-nav">
