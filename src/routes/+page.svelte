@@ -6,7 +6,22 @@
 
   let videoWrapper: HTMLDivElement;
   let videoIframe: HTMLIFrameElement;
-  let hasScrolled = false;
+  let hasPlayed = false;
+
+  function playVideo() {
+    if (hasPlayed || !videoIframe) return;
+
+    hasPlayed = true;
+
+    // Update the iframe src to enable autoplay
+    const currentSrc = videoIframe.src;
+    if (!currentSrc.includes('autoplay=1')) {
+      const newSrc = currentSrc.includes('?')
+        ? currentSrc + '&autoplay=1'
+        : currentSrc + '?autoplay=1';
+      videoIframe.src = newSrc;
+    }
+  }
 
   onMount(() => {
     if (!videoWrapper || !videoIframe) return;
@@ -22,28 +37,31 @@
     videoIframe.style.top = `-${halfCrop}px`;
     videoIframe.style.height = `calc(100% + ${crop}px)`;
 
-    // Handle scroll to play video with sound
-    const handleScroll = () => {
-      if (hasScrolled) return;
+    // Option A: Play on any pointer interaction
+    const pointerHandler = () => playVideo();
+    document.addEventListener('mousemove', pointerHandler);
+    document.addEventListener('click', pointerHandler);
+    document.addEventListener('touchstart', pointerHandler);
 
-      hasScrolled = true;
+    // Option B: Play when video enters viewport
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            playVideo();
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
 
-      // Update the iframe src to enable autoplay (user interaction allows sound)
-      const currentSrc = videoIframe.src;
-      if (!currentSrc.includes('autoplay=1')) {
-        const newSrc = currentSrc.includes('?')
-          ? currentSrc + '&autoplay=1'
-          : currentSrc + '?autoplay=1';
-        videoIframe.src = newSrc;
-      }
-
-      window.removeEventListener('scroll', handleScroll);
-    };
-
-    window.addEventListener('scroll', handleScroll);
+    observer.observe(videoWrapper);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('mousemove', pointerHandler);
+      document.removeEventListener('click', pointerHandler);
+      document.removeEventListener('touchstart', pointerHandler);
+      observer.disconnect();
     };
   });
 
