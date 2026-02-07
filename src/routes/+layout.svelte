@@ -5,8 +5,6 @@
   let mobileMenuOpen = false;
   const navItems = [
     { name: 'Portfolio', href: '/' },
-    { name: 'Logs', href: '/logs' },
-    { name: 'About', href: '/about' },
     { name: 'Kit', href: '/kit' }
   ];
 

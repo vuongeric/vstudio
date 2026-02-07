@@ -7,7 +7,7 @@
   export let className = '';
   
   // Ensure the image path is correctly formatted
-  $: src = imagePath.startsWith('/') ? imagePath : imagePath.startsWith('images/') ? `/${imagePath}` : `images/${imagePath}`;
+  $: src = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
 </script>
 
 <div class="panoramic-container">

@@ -30,12 +30,7 @@
   "include": [
     "src/**/*.d.ts",
     "src/**/*.js",
-    "src/**/*.ts",
-    "src/**/*.jsx",
     "src/**/*.svelte",
-    "src/ambient.d.ts"
-  ],
-  "files": [
-    "src/ambient.d.ts"
+    "src/**/*.ts"
   ]
 }

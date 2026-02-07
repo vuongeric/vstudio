@@ -11,25 +11,25 @@ export interface Image {
 export const images: Image[] = [
   {
     id: 1,
-    path: 'images/DSCF6180.webp',
+    path: '/DSCF6180.jpg',
     title: 'Lake Kawaguchiko',
     alt: 'First photography work'
   },
   {
     id: 2,
-    path: 'images/DSCF6217.webp',
+    path: '/DSCF6217.jpg',
     title: 'Tenku-no Torii',
     alt: 'Second photography work'
   },
   {
     id: 3,
-    path: 'images/DSCF6900.webp',
+    path: '/DSCF6900.jpg',
     title: 'Lake Saiko',
     alt: 'Third photography work'
   },
   {
     id: 4,
-    path: 'images/DSCF6934.webp',
+    path: '/DSCF6934.jpg',
     title: 'Kawaguchiko Music Forest',
     alt: 'Fourth photography work'
   }

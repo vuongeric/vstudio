@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-cloudflare';
+import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { enhancedImages } from '@sveltejs/enhanced-img';
 
@@ -9,18 +9,14 @@ const config = {
 	preprocess: [vitePreprocess(), enhancedImages()],
 
 	kit: {
-		adapter: adapter({
-			// Cloudflare Pages configuration
-			routes: {
-				handle: 'filesystem',
-				rules: {
-					'/*': { type: 'edge' }
-				}
-			}
-		}),
+		adapter: adapter(),
+		paths: {
+			base: '/vstudio'
+		},
 		// Enable prerendering for better performance
 		prerender: {
-			entries: ['*']
+			entries: ['/', '/kit'],
+			handleHttpError: 'warn'
 		}
 	}
 };
