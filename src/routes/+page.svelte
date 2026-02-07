@@ -42,10 +42,10 @@
     <div class="video-wrapper" bind:this={videoWrapper}>
       <iframe
         bind:this={videoIframe}
-        src="https://www.youtube.com/embed/0YwiDPpI7k8?autoplay=1&mute=1&controls=0&disablekb=1&fs=0&loop=1&modestbranding=1&rel=0&showinfo=0"
+        src="https://www.youtube.com/embed/0YwiDPpI7k8?controls=1&fs=1&modestbranding=1&rel=0"
         title="Sounds of Japan | 4K Cinematic Travel Video"
         frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen>
       </iframe>
     </div>
