@@ -221,7 +221,7 @@
 		<div class="menu-item">
 			<div class="dish-name">Service One — Mala Tofu Udon</div>
 			<div class="dish-description">
-				Silken tofu luxuriously coated in a velvety creamy sauce with stir-fried minced pork, perfumed with the signature numbing heat of Chinese peppercorn, finished over tender udon noodles
+				Silken tofu blended to silky perfection, creating a luxurious creamy sauce without heavy cream — stir-fried minced pork with the signature numbing heat of Chinese peppercorn envelops each strand of tender udon noodles
 			</div>
 			<div class="ingredients">
 				<div class="ingredient-label">Signature spice:</div> Mala peppercorn blend
