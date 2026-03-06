@@ -2,7 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 
 	const START  = new Date('2026-02-26T00:00:00');
-	const TARGET = new Date('2026-08-26T00:00:00');
+	const TARGET = new Date('2026-09-23T00:00:00');
 
 	let months  = $state(0);
 	let weeks   = $state(0);
