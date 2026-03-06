@@ -15,7 +15,7 @@ const config = {
 		},
 		// Enable prerendering for better performance
 		prerender: {
-			entries: ['/', '/kit', '/2026-02-11'],
+			entries: ['/', '/kit', '/2026-02-11', '/countdown'],
 			handleHttpError: 'warn'
 		}
 	}
