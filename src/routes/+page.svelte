@@ -37,7 +37,20 @@
 </script>
 
 <div class="gallery">
-  <!-- YouTube Video -->
+  <!-- YouTube Video 1 -->
+  <section class="video-container mb-16">
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/G0_sWmx2Quo?controls=1&fs=1&modestbranding=1&rel=0"
+        title="YouTube Video"
+        frameborder="0"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </section>
+
+  <!-- YouTube Video 2 -->
   <section class="video-container mb-16">
     <div class="video-wrapper" bind:this={videoWrapper}>
       <iframe
