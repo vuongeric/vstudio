@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Camera body -->
+  <rect x="10" y="15" width="80" height="70" rx="8" fill="#2d2d2d" stroke="#1a1a1a" stroke-width="1.5"/>
+
+  <!-- Top panel -->
+  <rect x="12" y="17" width="76" height="18" rx="6" fill="#1a1a1a"/>
+
+  <!-- Lens -->
+  <circle cx="50" cy="50" r="22" fill="#0a0a0a" stroke="#1a1a1a" stroke-width="2"/>
+  <circle cx="50" cy="50" r="19" fill="#1a1a1a" stroke="#2d2d2d" stroke-width="1"/>
+  <circle cx="50" cy="50" r="16" fill="#0a0a0a" stroke="#4a4a4a" stroke-width="1"/>
+
+  <!-- Lens glare -->
+  <circle cx="45" cy="45" r="6" fill="#ffffff" opacity="0.4"/>
+
+  <!-- Shutter/Flash area -->
+  <circle cx="25" cy="25" r="3.5" fill="#4a4a4a"/>
+  <circle cx="25" cy="25" r="2.5" fill="#2d2d2d"/>
+
+  <!-- Viewfinder window -->
+  <rect x="68" y="22" width="12" height="12" rx="2" fill="#0a0a0a" stroke="#4a4a4a" stroke-width="1"/>
+
+  <!-- Bottom label area -->
+  <rect x="15" y="75" width="70" height="6" rx="2" fill="#3a3a3a" opacity="0.8"/>
+</svg>
