@@ -9,7 +9,8 @@
   ];
   const easterEggItems = [
     { name: 'Horse Menu', href: `${base}/2026-02-11` },
-    { name: 'Countdown', href: `${base}/countdown` }
+    { name: 'Countdown', href: `${base}/countdown` },
+    { name: 'cofi', href: `${base}/cofi` }
   ];
 
   $: currentPath = $page.url.pathname;
