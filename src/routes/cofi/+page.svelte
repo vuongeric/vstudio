@@ -338,6 +338,13 @@
 					min="0"
 					step="1000"
 				/>
+				<input
+					type="range"
+					bind:value={inputs.currentSavings}
+					min="0"
+					max="2000000"
+					step="1000"
+				/>
 			</label>
 
 			<label>
@@ -346,6 +353,13 @@
 					type="number"
 					bind:value={inputs.monthlyContribution}
 					min="0"
+					step="100"
+				/>
+				<input
+					type="range"
+					bind:value={inputs.monthlyContribution}
+					min="0"
+					max="20000"
 					step="100"
 				/>
 			</label>
@@ -378,6 +392,13 @@
 					type="number"
 					bind:value={inputs.annualExpenses}
 					min="0"
+					step="1000"
+				/>
+				<input
+					type="range"
+					bind:value={inputs.annualExpenses}
+					min="0"
+					max="250000"
 					step="1000"
 				/>
 			</label>
@@ -512,6 +533,13 @@
 								<input
 									type="number"
 									bind:value={phase.annualContribution}
+									step="1000"
+								/>
+								<input
+									type="range"
+									bind:value={phase.annualContribution}
+									min="0"
+									max="150000"
 									step="1000"
 								/>
 							</label>

@@ -5,12 +5,12 @@
   let mobileMenuOpen = false;
   const navItems = [
     { name: 'Portfolio', href: `${base}/` },
-    { name: 'Kit', href: `${base}/kit` }
+    { name: 'Kit', href: `${base}/kit` },
+    { name: 'cofi', href: `${base}/cofi` }
   ];
   const easterEggItems = [
     { name: 'Horse Menu', href: `${base}/2026-02-11` },
-    { name: 'Countdown', href: `${base}/countdown` },
-    { name: 'cofi', href: `${base}/cofi` }
+    { name: 'Countdown', href: `${base}/countdown` }
   ];
 
   $: currentPath = $page.url.pathname;
