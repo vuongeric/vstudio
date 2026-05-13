@@ -1,20 +1,18 @@
 <script>
   import { page } from '$app/stores';
   import { base } from '$app/paths';
-  import { onMount } from 'svelte';
 
   let mobileMenuOpen = false;
   const navItems = [
     { name: 'Portfolio', href: `${base}/` },
     { name: 'Kit', href: `${base}/kit` }
   ];
+  const easterEggItems = [
+    { name: 'Horse Menu', href: `${base}/2026-02-11` },
+    { name: 'Countdown', href: `${base}/countdown` }
+  ];
 
   $: currentPath = $page.url.pathname;
-  
-  // Close mobile menu when navigating
-  $: if (mobileMenuOpen && $page) {
-    mobileMenuOpen = false;
-  }
 </script>
 
 <div class="app">
@@ -38,7 +36,8 @@
       <button 
         class="mobile-menu-button"
         on:click={() => (mobileMenuOpen = !mobileMenuOpen)}
-        aria-expanded="false"
+        aria-expanded={mobileMenuOpen}
+        aria-label="Menu"
       >
         <span class="sr-only">Menu</span>
         <div class={mobileMenuOpen ? 'hamburger open' : 'hamburger'}>
@@ -56,6 +55,17 @@
           <a 
             href={item.href}
             class:active={currentPath === item.href}
+            on:click={() => (mobileMenuOpen = false)}
+          >
+            {item.name}
+          </a>
+        {/each}
+        <div class="mobile-menu-divider"></div>
+        {#each easterEggItems as item}
+          <a 
+            href={item.href}
+            class:active={currentPath === item.href}
+            on:click={() => (mobileMenuOpen = false)}
           >
             {item.name}
           </a>
@@ -219,33 +229,28 @@
     top: 0px;
   }
 
-  .hamburger span:nth-child(2),
-  .hamburger span:nth-child(3) {
+  .hamburger span:nth-child(2) {
     top: 7px;
   }
 
-  .hamburger span:nth-child(4) {
+  .hamburger span:nth-child(3) {
     top: 14px;
   }
 
   .hamburger.open span:nth-child(1) {
     top: 7px;
-    width: 0%;
-    left: 50%;
-  }
-
-  .hamburger.open span:nth-child(2) {
     transform: rotate(45deg);
   }
 
-  .hamburger.open span:nth-child(3) {
-    transform: rotate(-45deg);
-  }
-
-  .hamburger.open span:nth-child(4) {
-    top: 7px;
+  .hamburger.open span:nth-child(2) {
+    opacity: 0;
     width: 0%;
     left: 50%;
+  }
+
+  .hamburger.open span:nth-child(3) {
+    top: 7px;
+    transform: rotate(-45deg);
   }
 
   /* Mobile menu */
@@ -270,6 +275,12 @@
   .mobile-menu a.active {
     background-color: #f3f4f6;
     color: #1e40af;
+  }
+
+  .mobile-menu-divider {
+    height: 1px;
+    margin: 0.35rem 1.5rem;
+    background: #e5e7eb;
   }
 
   .sr-only {

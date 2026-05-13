@@ -3,6 +3,7 @@
 
 	const START  = new Date('2026-02-26T00:00:00');
 	const TARGET = new Date('2026-09-23T00:00:00');
+	const MONEY_START = new Date('2026-04-27T00:00:00');
 
 	let months  = $state(0);
 	let weeks   = $state(0);
@@ -76,7 +77,7 @@
 		'2026-04-09': { candy: 2, chocolate: 1 },
 	};
 
-	interface Square { status: 'past' | 'today' | 'future'; candy: number; chocolate: number; jackpot: boolean; date: Date }
+	interface Square { status: 'past' | 'today' | 'future'; candy: number; chocolate: number; jackpot: boolean; money: boolean; date: Date }
 
 	function dateKey(d: Date): string {
 		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -94,7 +95,14 @@
 			if      (d < today)                       status = 'past';
 			else if (d.getTime() === today.getTime()) status = 'today';
 			else                                      status = 'future';
-			squares.push({ status, candy: data.candy ?? 0, chocolate: data.chocolate ?? 0, jackpot: data.jackpot ?? false, date: d });
+			squares.push({
+				status,
+				candy: data.candy ?? 0,
+				chocolate: data.chocolate ?? 0,
+				jackpot: data.jackpot ?? false,
+				money: status === 'past' && d >= MONEY_START,
+				date: d
+			});
 			cur.setDate(cur.getDate() + 1);
 		}
 		return squares;
@@ -117,7 +125,7 @@
 		if (sq.candy > 0) parts.push(`candy: ${sq.candy}`);
 		if (sq.chocolate > 0)     parts.push(`chocolate: ${sq.chocolate}`);
 		if (sq.jackpot)    parts.push(`jackpot 🎰`);
-		if (parts.length === 1) parts.push('🤑');
+		if (parts.length === 1) parts.push(sq.date >= MONEY_START ? '🤑🤑' : '🤑');
 		return parts.join('\n');
 	}
 
@@ -216,6 +224,7 @@
 			<div
 				class="sq {sq.status} has-tip"
 				class:active={sq.jackpot || sq.chocolate > 0 || sq.candy > 0}
+				class:money={sq.money}
 				style={squareBg(sq) ? `background:${squareBg(sq)}` : ''}
 				data-tip={squareTip(sq)}
 				onmouseenter={sq.jackpot ? startConfetti : undefined}
@@ -252,9 +261,9 @@
 	/* ---------- grid ---------- */
 	.grid {
 		display: grid;
-		grid-template-columns: repeat(26, 14px);
-		grid-template-rows: repeat(7, 14px);
-		gap: 3px;
+		grid-template-columns: repeat(26, 18px);
+		grid-template-rows: repeat(7, 18px);
+		gap: 4px;
 		opacity: 0;
 		transform: translateY(6px);
 		transition: opacity 0.5s ease, transform 0.5s ease;
@@ -262,8 +271,8 @@
 	.mounted .grid { opacity: 1; transform: translateY(0); }
 
 	.sq {
-		width: 14px;
-		height: 14px;
+		width: 18px;
+		height: 18px;
 		border-radius: 2px;
 		position: relative;
 	}
@@ -279,6 +288,21 @@
 		background-image:
 			linear-gradient(45deg,  transparent 35%, #c0c0c0 35%, #c0c0c0 65%, transparent 65%),
 			linear-gradient(-45deg, transparent 35%, #c0c0c0 35%, #c0c0c0 65%, transparent 65%);
+	}
+	.sq.past.money:not(.active) {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-image: none;
+		color: #17803d;
+		font-family: 'Courier New', Courier, monospace;
+		font-size: 0.72rem;
+		font-weight: 700;
+		line-height: 1;
+	}
+	.sq.past.money:not(.active)::before {
+		content: '$';
+		transform: translateY(-0.5px);
 	}
 
 	.sq.today {
