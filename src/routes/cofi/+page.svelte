@@ -60,6 +60,7 @@
 		enabled: defaultPhaseConfig.enabled,
 		phases: defaultPhaseConfig.phases.map((phase) => ({ ...phase }))
 	});
+	let showingPhaseEditor = $state(false);
 
 	const chartWidth = 920;
 	const chartHeight = 420;
@@ -246,14 +247,26 @@
 	);
 	let finalPoint = $derived(projectionData[projectionData.length - 1]);
 	let coastAge = $derived(
-		firstAge(projectionData, (point) => point.netWorth, (point) => point.coastFireNumber)
+		firstAge(
+			projectionData,
+			(point) => point.netWorth,
+			(point) => point.coastFireNumber
+		)
 	);
 	let fireAge = $derived(
-		firstAge(projectionData, (point) => point.netWorth, (point) => point.retirementNumber)
+		firstAge(
+			projectionData,
+			(point) => point.netWorth,
+			(point) => point.retirementNumber
+		)
 	);
 	let phaseCoastAge = $derived(
 		phaseConfig.enabled
-			? firstAge(projectionData, (point) => point.phaseNetWorth, (point) => point.coastFireNumber)
+			? firstAge(
+					projectionData,
+					(point) => point.phaseNetWorth,
+					(point) => point.coastFireNumber
+				)
 			: null
 	);
 	let yMax = $derived(
@@ -305,115 +318,136 @@
 	</section>
 
 	<section class="tool-grid">
-		<form class="panel inputs" aria-label="Financial inputs">
-			<div class="panel-heading">
-				<h2>Inputs</h2>
-				<button type="button" onclick={() => (inputs = { ...defaultInputs })}>Reset</button>
+		<div class="control-card" class:flipped={showingPhaseEditor}>
+			<div class="control-card-inner">
+				<form class="panel inputs card-face card-front" aria-label="Financial inputs">
+					<div class="panel-heading">
+						<h2>Inputs</h2>
+						<div class="button-row">
+							<button type="button" onclick={() => (inputs = { ...defaultInputs })}>Reset</button>
+							<button type="button" onclick={() => (showingPhaseEditor = true)}>Phases</button>
+						</div>
+					</div>
+
+					<label>
+						<span>Current age</span>
+						<input type="number" bind:value={inputs.currentAge} min="0" />
+					</label>
+
+					<label>
+						<span>Retirement age</span>
+						<input
+							class:invalid={inputs.retirementAge < inputs.currentAge}
+							type="number"
+							bind:value={inputs.retirementAge}
+							aria-invalid={inputs.retirementAge < inputs.currentAge}
+						/>
+					</label>
+
+					<label>
+						<span>Current savings</span>
+						<input type="number" bind:value={inputs.currentSavings} min="0" step="1000" />
+						<input
+							type="range"
+							bind:value={inputs.currentSavings}
+							min="0"
+							max="2000000"
+							step="1000"
+						/>
+					</label>
+
+					<label>
+						<span>Monthly contribution</span>
+						<input type="number" bind:value={inputs.monthlyContribution} min="0" step="100" />
+						<input
+							type="range"
+							bind:value={inputs.monthlyContribution}
+							min="0"
+							max="20000"
+							step="100"
+						/>
+					</label>
+
+					<label class="range">
+						<span>Annual return <strong>{inputs.annualReturn.toFixed(1)}%</strong></span>
+						<input type="range" bind:value={inputs.annualReturn} min="0" max="15" step="0.1" />
+					</label>
+
+					<label class="range">
+						<span>Inflation <strong>{inputs.inflationRate.toFixed(1)}%</strong></span>
+						<input type="range" bind:value={inputs.inflationRate} min="0" max="10" step="0.1" />
+					</label>
+
+					<label>
+						<span>Annual retirement expenses</span>
+						<input type="number" bind:value={inputs.annualExpenses} min="0" step="1000" />
+						<input
+							type="range"
+							bind:value={inputs.annualExpenses}
+							min="0"
+							max="250000"
+							step="1000"
+						/>
+					</label>
+
+					<label class="range">
+						<span>Withdrawal rate <strong>{inputs.safeWithdrawalRate.toFixed(1)}%</strong></span>
+						<input
+							type="range"
+							bind:value={inputs.safeWithdrawalRate}
+							min="1"
+							max="10"
+							step="0.1"
+						/>
+					</label>
+				</form>
+
+				<section class="panel phases card-face card-back" aria-label="6-phase inputs">
+					<div class="phase-header">
+						<div>
+							<h2>6-phase approach</h2>
+							<label class="toggle">
+								<input type="checkbox" bind:checked={phaseConfig.enabled} />
+								<span>{phaseConfig.enabled ? 'Enabled' : 'Disabled'}</span>
+							</label>
+						</div>
+						<button type="button" onclick={() => (showingPhaseEditor = false)}>Inputs</button>
+					</div>
+
+					<div class="phase-list compact">
+						{#each phaseConfig.phases as phase}
+							<div class="phase-row">
+								<label class="phase-name">
+									<span>Name</span>
+									<input bind:value={phase.name} />
+								</label>
+								<label>
+									<span>Start</span>
+									<input type="number" bind:value={phase.ageStart} />
+								</label>
+								<label>
+									<span>End</span>
+									<input type="number" bind:value={phase.ageEnd} />
+								</label>
+								<label class="phase-contribution">
+									<span
+										>Contribution <strong>{formatCurrency(phase.annualContribution)}</strong></span
+									>
+									<input type="number" bind:value={phase.annualContribution} step="1000" />
+									<input
+										type="range"
+										bind:value={phase.annualContribution}
+										min="0"
+										max="150000"
+										step="1000"
+									/>
+								</label>
+							</div>
+						{/each}
+					</div>
+				</section>
 			</div>
-
-			<label>
-				<span>Current age</span>
-				<input
-					type="number"
-					bind:value={inputs.currentAge}
-					min="0"
-				/>
-			</label>
-
-			<label>
-				<span>Retirement age</span>
-				<input
-					class:invalid={inputs.retirementAge < inputs.currentAge}
-					type="number"
-					bind:value={inputs.retirementAge}
-					aria-invalid={inputs.retirementAge < inputs.currentAge}
-				/>
-			</label>
-
-			<label>
-				<span>Current savings</span>
-				<input
-					type="number"
-					bind:value={inputs.currentSavings}
-					min="0"
-					step="1000"
-				/>
-				<input
-					type="range"
-					bind:value={inputs.currentSavings}
-					min="0"
-					max="2000000"
-					step="1000"
-				/>
-			</label>
-
-			<label>
-				<span>Monthly contribution</span>
-				<input
-					type="number"
-					bind:value={inputs.monthlyContribution}
-					min="0"
-					step="100"
-				/>
-				<input
-					type="range"
-					bind:value={inputs.monthlyContribution}
-					min="0"
-					max="20000"
-					step="100"
-				/>
-			</label>
-
-			<label class="range">
-				<span>Annual return <strong>{inputs.annualReturn.toFixed(1)}%</strong></span>
-				<input
-					type="range"
-					bind:value={inputs.annualReturn}
-					min="0"
-					max="15"
-					step="0.1"
-				/>
-			</label>
-
-			<label class="range">
-				<span>Inflation <strong>{inputs.inflationRate.toFixed(1)}%</strong></span>
-				<input
-					type="range"
-					bind:value={inputs.inflationRate}
-					min="0"
-					max="10"
-					step="0.1"
-				/>
-			</label>
-
-			<label>
-				<span>Annual retirement expenses</span>
-				<input
-					type="number"
-					bind:value={inputs.annualExpenses}
-					min="0"
-					step="1000"
-				/>
-				<input
-					type="range"
-					bind:value={inputs.annualExpenses}
-					min="0"
-					max="250000"
-					step="1000"
-				/>
-			</label>
-
-			<label class="range">
-				<span>Withdrawal rate <strong>{inputs.safeWithdrawalRate.toFixed(1)}%</strong></span>
-				<input
-					type="range"
-					bind:value={inputs.safeWithdrawalRate}
-					min="1"
-					max="10"
-					step="0.1"
-				/>
-			</label>
-		</form>
+		</div>
 
 		<section class="panel chart-panel" aria-label="Financial projection chart">
 			<div class="panel-heading">
@@ -429,7 +463,11 @@
 			</div>
 
 			<div class="chart-wrap">
-				<svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} role="img" aria-label="Projection line chart">
+				<svg
+					viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+					role="img"
+					aria-label="Projection line chart"
+				>
 					<rect class="chart-bg" x={pad.left} y={pad.top} width={plotWidth} height={plotHeight} />
 					{#each yTicks as tick}
 						<line
@@ -474,80 +512,14 @@
 
 			<div class="chart-notes">
 				<p>
-					Coast FI means the amount invested today can grow to the retirement target by retirement age
-					without more contributions.
+					Coast FI means the amount invested today can grow to the retirement target by retirement
+					age without more contributions.
 				</p>
 				{#if phaseConfig.enabled}
 					<p>6-phase Coast FI age: <strong>{phaseCoastAge ?? 'not reached'}</strong></p>
 				{/if}
 			</div>
 		</section>
-	</section>
-
-	<section class="panel phases">
-		<div class="phase-header">
-			<div>
-				<h2>6-phase approach</h2>
-				<p>Use annual contribution phases for a less linear plan.</p>
-			</div>
-			<label class="toggle">
-				<input
-					type="checkbox"
-					bind:checked={phaseConfig.enabled}
-				/>
-				<span>{phaseConfig.enabled ? 'Enabled' : 'Disabled'}</span>
-			</label>
-		</div>
-
-		{#if phaseConfig.enabled}
-			<div class="phase-list">
-				{#each phaseConfig.phases as phase, index}
-					<details>
-						<summary>
-							<span>{phase.name}</span>
-							<em>Age {phase.ageStart}-{phase.ageEnd} / {formatCurrency(phase.annualContribution)}/yr</em>
-						</summary>
-						<div class="phase-fields">
-							<label>
-								<span>Name</span>
-								<input
-									bind:value={phase.name}
-								/>
-							</label>
-							<label>
-								<span>Start age</span>
-								<input
-									type="number"
-									bind:value={phase.ageStart}
-								/>
-							</label>
-							<label>
-								<span>End age</span>
-								<input
-									type="number"
-									bind:value={phase.ageEnd}
-								/>
-							</label>
-							<label>
-								<span>Annual contribution</span>
-								<input
-									type="number"
-									bind:value={phase.annualContribution}
-									step="1000"
-								/>
-								<input
-									type="range"
-									bind:value={phase.annualContribution}
-									min="0"
-									max="150000"
-									step="1000"
-								/>
-							</label>
-						</div>
-					</details>
-				{/each}
-			</div>
-		{/if}
 	</section>
 </div>
 
@@ -575,8 +547,7 @@
 	label span,
 	.legend,
 	.chart-notes,
-	summary em,
-	.phase-header p {
+	.phase-header {
 		font-family: 'Courier New', Courier, monospace;
 	}
 
@@ -625,9 +596,37 @@
 
 	.tool-grid {
 		display: grid;
-		grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+		grid-template-columns: minmax(330px, 390px) minmax(0, 1fr);
 		gap: 1rem;
 		align-items: start;
+	}
+
+	.control-card {
+		min-height: 820px;
+		perspective: 1600px;
+	}
+
+	.control-card-inner {
+		position: relative;
+		min-height: 820px;
+		transform-style: preserve-3d;
+		transition: transform 0.55s ease;
+	}
+
+	.control-card.flipped .control-card-inner {
+		transform: rotateY(180deg);
+	}
+
+	.card-face {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+		backface-visibility: hidden;
+		-webkit-backface-visibility: hidden;
+	}
+
+	.card-back {
+		transform: rotateY(180deg);
 	}
 
 	.panel {
@@ -640,6 +639,7 @@
 	.inputs,
 	.chart-panel,
 	.phases {
+		height: 100%;
 		padding: 1rem;
 	}
 
@@ -652,7 +652,13 @@
 		margin-bottom: 0.9rem;
 	}
 
-	.panel-heading button {
+	.button-row {
+		display: flex;
+		gap: 0.45rem;
+	}
+
+	.panel-heading button,
+	.phase-header button {
 		border: 1px solid #cbd5e1;
 		border-radius: 6px;
 		background: #f8fafc;
@@ -820,12 +826,6 @@
 		max-width: 42rem;
 	}
 
-	.phase-header p {
-		margin-top: 0.25rem;
-		color: #667085;
-		font-size: 0.78rem;
-	}
-
 	.toggle {
 		display: inline-flex;
 		grid-template-columns: auto auto;
@@ -841,40 +841,45 @@
 
 	.phase-list {
 		display: grid;
-		gap: 0.6rem;
+		gap: 0.42rem;
 	}
 
-	details {
+	.phase-list.compact {
+		gap: 0.42rem;
+	}
+
+	.phase-row {
+		display: grid;
+		grid-template-columns: minmax(0, 1.25fr) 3.8rem 3.8rem minmax(0, 1.15fr);
+		align-items: end;
+		gap: 0.38rem;
 		border: 1px solid #e4eaf0;
 		border-radius: 8px;
 		background: #fbfdff;
+		padding: 0.45rem;
 	}
 
-	summary {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-		padding: 0.85rem 1rem;
-		cursor: pointer;
+	.phase-contribution {
+		grid-column: auto;
 	}
 
-	summary span {
-		font-weight: 700;
+	.phase-row input {
+		padding: 0.36rem 0.45rem;
+		font-size: 0.78rem;
 	}
 
-	summary em {
-		color: #667085;
-		font-size: 0.75rem;
-		font-style: normal;
-		text-align: right;
+	.phase-row label {
+		gap: 0.18rem;
 	}
 
-	.phase-fields {
-		display: grid;
-		grid-template-columns: 2fr repeat(3, 1fr);
-		gap: 0.75rem;
-		padding: 0 1rem 1rem;
+	.phase-row label span {
+		font-size: 0.66rem;
+		line-height: 1;
+	}
+
+	.phase-row input[type='range'] {
+		padding: 0;
+		height: 0.9rem;
 	}
 
 	@media (max-width: 980px) {
@@ -884,10 +889,6 @@
 
 		.tool-grid {
 			grid-template-columns: 1fr;
-		}
-
-		.phase-fields {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 	}
 
@@ -902,14 +903,19 @@
 
 		.panel-heading,
 		.phase-header,
-		summary,
 		.chart-notes {
 			align-items: flex-start;
 			flex-direction: column;
 		}
 
-		.phase-fields {
+		.button-row,
+		.phase-row {
 			grid-template-columns: 1fr;
+			width: 100%;
+		}
+
+		.button-row {
+			display: grid;
 		}
 	}
 </style>
