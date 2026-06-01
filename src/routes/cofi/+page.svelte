@@ -231,6 +231,20 @@
 			.join(' ');
 	}
 
+	function areaFor(
+		data: DataPoint[],
+		valueSelector: (point: DataPoint) => number | null | undefined,
+		yMax: number
+	): string {
+		const path = pathFor(data, valueSelector, yMax);
+		if (!path || data.length === 0) return '';
+
+		const firstX = xFor(0, data.length);
+		const lastX = xFor(data.length - 1, data.length);
+		const baseY = pad.top + plotHeight;
+		return `${path} L ${lastX.toFixed(2)} ${baseY.toFixed(2)} L ${firstX.toFixed(2)} ${baseY.toFixed(2)} Z`;
+	}
+
 	function yFor(value: number, yMax: number): number {
 		return pad.top + plotHeight - (Math.min(value, yMax) / yMax) * plotHeight;
 	}
@@ -580,6 +594,13 @@
 					role="img"
 					aria-label="Projection line chart"
 				>
+					<defs>
+						<linearGradient id="net-worth-fill" x1="0" x2="0" y1="0" y2="1">
+							<stop offset="0%" stop-color="#d69b2d" stop-opacity="0.42" />
+							<stop offset="72%" stop-color="#f6d28a" stop-opacity="0.18" />
+							<stop offset="100%" stop-color="#fffaf1" stop-opacity="0" />
+						</linearGradient>
+					</defs>
 					<rect class="chart-bg" x={pad.left} y={pad.top} width={plotWidth} height={plotHeight} />
 					{#each yTicks as tick}
 						<line
@@ -611,6 +632,10 @@
 					<path
 						class="line coast"
 						d={pathFor(projectionData, (point) => point.coastFireNumber, yMax)}
+					/>
+					<path
+						class="area net-area"
+						d={areaFor(projectionData, (point) => point.netWorth, yMax)}
 					/>
 					<path class="line net" d={pathFor(projectionData, (point) => point.netWorth, yMax)} />
 					{#if phaseConfig.enabled}
@@ -735,15 +760,27 @@
 
 <style>
 	:global(main) {
-		max-width: 1440px;
+		max-width: 1500px;
 	}
 
 	.cofi-page {
 		display: flex;
 		flex-direction: column;
-		gap: 1.5rem;
-		padding-bottom: 2rem;
-		color: #172033;
+		gap: 1.35rem;
+		margin: -1rem;
+		min-height: calc(100vh - 4rem);
+		padding: clamp(1.1rem, 3vw, 2rem);
+		background:
+			linear-gradient(180deg, rgba(255, 248, 234, 0.8), rgba(247, 247, 242, 0.96) 32rem), #f7f7f2;
+		color: #242424;
+		font-family:
+			Inter,
+			ui-sans-serif,
+			system-ui,
+			-apple-system,
+			BlinkMacSystemFont,
+			'Segoe UI',
+			sans-serif;
 	}
 
 	.intro {
@@ -752,66 +789,69 @@
 	}
 
 	.eyebrow,
-	.panel-heading,
 	.summary span,
 	label span,
 	.legend,
-	.chart-notes,
-	.phase-header {
-		font-family: 'Courier New', Courier, monospace;
+	.chart-notes {
+		font-family: inherit;
 	}
 
 	.eyebrow {
-		color: #0f766e;
-		font-size: 0.8rem;
-		font-weight: 700;
-		letter-spacing: 0.18em;
+		color: #7b6a43;
+		font-size: 0.72rem;
+		font-weight: 800;
+		letter-spacing: 0.16em;
 		text-transform: uppercase;
 	}
 
 	h2 {
-		font-size: 1rem;
+		color: #242424;
+		font-size: clamp(1.1rem, 2vw, 1.45rem);
+		font-weight: 750;
 		line-height: 1.2;
 	}
 
 	.summary {
 		display: grid;
 		grid-template-columns: repeat(4, minmax(0, 1fr));
-		gap: 1px;
-		overflow: hidden;
-		border: 1px solid #dfe5ea;
-		border-radius: 8px;
-		background: #dfe5ea;
+		gap: 0.85rem;
 	}
 
 	.summary div {
 		display: grid;
-		gap: 0.3rem;
+		gap: 0.45rem;
 		min-width: 0;
-		padding: 1rem;
-		background: #fff;
+		border: 1px solid rgba(36, 36, 36, 0.08);
+		border-radius: 16px;
+		background: rgba(255, 255, 255, 0.8);
+		padding: 1.05rem 1.15rem;
+		box-shadow: 0 18px 46px rgba(63, 54, 37, 0.07);
 	}
 
 	.summary span {
-		color: #697386;
-		font-size: 0.72rem;
+		color: #77736b;
+		font-size: 0.7rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
 		text-transform: uppercase;
 	}
 
 	.summary strong {
 		overflow-wrap: anywhere;
-		font-size: clamp(1.1rem, 2vw, 1.55rem);
+		font-size: clamp(1.35rem, 2.2vw, 2rem);
+		font-weight: 760;
 		line-height: 1.1;
 	}
 
 	.tool-grid {
 		display: grid;
-		grid-template-columns: minmax(330px, 390px) minmax(0, 1fr);
-		gap: 1rem;
+		grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
+		gap: 1.1rem;
 		align-items: start;
 	}
 
 	.control-card {
+		order: 2;
 		min-height: 820px;
 		perspective: 1600px;
 	}
@@ -840,17 +880,22 @@
 	}
 
 	.panel {
-		border: 1px solid #dfe5ea;
-		border-radius: 8px;
-		background: #fff;
-		box-shadow: 0 8px 28px rgba(15, 23, 42, 0.06);
+		border: 1px solid rgba(36, 36, 36, 0.08);
+		border-radius: 18px;
+		background: rgba(255, 255, 255, 0.88);
+		box-shadow: 0 20px 60px rgba(63, 54, 37, 0.08);
 	}
 
 	.inputs,
 	.chart-panel,
 	.phases {
 		height: 100%;
-		padding: 1rem;
+		padding: 1.15rem;
+	}
+
+	.chart-panel {
+		order: 1;
+		min-height: min(620px, calc(100vh - 11rem));
 	}
 
 	.panel-heading,
@@ -878,13 +923,28 @@
 	.panel-heading button,
 	.phase-header button,
 	.fullscreen-toggle {
-		border: 1px solid #cbd5e1;
-		border-radius: 6px;
-		background: #f8fafc;
-		color: #172033;
-		padding: 0.45rem 0.7rem;
+		border: 1px solid rgba(36, 36, 36, 0.1);
+		border-radius: 999px;
+		background: #fff;
+		color: #242424;
+		padding: 0.55rem 0.9rem;
 		font: inherit;
+		font-size: 0.82rem;
+		font-weight: 700;
 		cursor: pointer;
+		box-shadow: 0 8px 20px rgba(63, 54, 37, 0.06);
+		transition:
+			transform 0.18s ease,
+			background 0.18s ease,
+			box-shadow 0.18s ease;
+	}
+
+	.panel-heading button:hover,
+	.phase-header button:hover,
+	.fullscreen-toggle:hover {
+		background: #fff8ea;
+		box-shadow: 0 12px 26px rgba(63, 54, 37, 0.1);
+		transform: translateY(-1px);
 	}
 
 	.inputs {
@@ -901,24 +961,27 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		color: #4f5b6d;
-		font-size: 0.75rem;
+		color: #77736b;
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
 	}
 
 	input {
 		width: 100%;
 		min-width: 0;
-		border: 1px solid #cbd5e1;
-		border-radius: 6px;
+		border: 1px solid rgba(36, 36, 36, 0.1);
+		border-radius: 12px;
 		background: #fff;
-		color: #172033;
+		color: #242424;
 		padding: 0.65rem 0.7rem;
 		font: inherit;
 	}
 
 	input:focus {
-		border-color: #0f766e;
-		outline: 3px solid rgba(15, 118, 110, 0.14);
+		border-color: #c78f2a;
+		outline: 4px solid rgba(214, 155, 45, 0.15);
 	}
 
 	input.invalid {
@@ -933,15 +996,16 @@
 
 	input[type='range'] {
 		padding: 0;
-		accent-color: #0f766e;
+		accent-color: #d69b2d;
 	}
 
 	.legend {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.55rem 0.9rem;
-		color: #5d6678;
-		font-size: 0.72rem;
+		color: #77736b;
+		font-size: 0.76rem;
+		font-weight: 650;
 		justify-content: flex-end;
 	}
 
@@ -958,26 +1022,27 @@
 	}
 
 	.legend .net {
-		background: #0f766e;
+		background: #d69b2d;
 	}
 
 	.legend .coast {
-		background: #2563eb;
+		background: #2f8f83;
 	}
 
 	.legend .retire {
-		background: #e11d48;
+		background: #be5b50;
 	}
 
 	.legend .phase {
-		background: #7c3aed;
+		background: #6d62b5;
 	}
 
 	.chart-wrap {
-		overflow-x: auto;
-		border: 1px solid #eef2f7;
-		border-radius: 8px;
-		background: #fbfdff;
+		overflow: hidden;
+		height: clamp(420px, 57vh, 680px);
+		border: 0;
+		border-radius: 16px;
+		background: linear-gradient(180deg, #fffaf1, #fbf7eb);
 	}
 
 	.chart-panel {
@@ -995,7 +1060,7 @@
 		z-index: 20;
 		display: grid;
 		grid-template-rows: auto minmax(0, 1fr) auto;
-		background: #fff;
+		background: #fffaf1;
 		box-shadow: 0 24px 80px rgba(15, 23, 42, 0.26);
 		animation: chart-expand 0.32s ease both;
 	}
@@ -1011,6 +1076,7 @@
 	.chart-panel.fullscreen .chart-wrap {
 		overflow: hidden;
 		min-height: 0;
+		height: auto;
 	}
 
 	.chart-panel.fullscreen svg {
@@ -1020,24 +1086,25 @@
 
 	svg {
 		display: block;
-		min-width: 760px;
+		min-width: 0;
 		width: 100%;
-		height: auto;
+		height: 100%;
 	}
 
 	.chart-bg {
-		fill: #fff;
+		fill: transparent;
 	}
 
 	.grid-line {
-		stroke: #e6edf3;
+		stroke: rgba(36, 36, 36, 0.07);
 		stroke-width: 1;
 	}
 
 	.axis-label {
-		fill: #64748b;
-		font-family: 'Courier New', Courier, monospace;
+		fill: #8c8577;
+		font-family: inherit;
 		font-size: 12px;
+		font-weight: 650;
 	}
 
 	.y-label {
@@ -1048,26 +1115,35 @@
 		fill: none;
 		stroke-linecap: round;
 		stroke-linejoin: round;
-		stroke-width: 4;
+		stroke-width: 3.2;
 	}
 
 	.line.net {
-		stroke: #0f766e;
+		stroke: #c98e24;
+		stroke-width: 4.3;
 	}
 
 	.line.retirement {
-		stroke: #e11d48;
-		stroke-dasharray: 9 8;
+		stroke: #be5b50;
+		stroke-dasharray: 8 8;
 	}
 
 	.line.coast {
-		stroke: #2563eb;
-		stroke-dasharray: 5 7;
+		stroke: #2f8f83;
+		stroke-dasharray: 5 8;
 	}
 
 	.line.phase {
-		stroke: #7c3aed;
+		stroke: #6d62b5;
 		stroke-width: 5;
+	}
+
+	.area {
+		pointer-events: none;
+	}
+
+	.net-area {
+		fill: url('#net-worth-fill');
 	}
 
 	.hover-inspector {
@@ -1075,19 +1151,19 @@
 	}
 
 	.hover-crosshair {
-		stroke: #94a3b8;
-		stroke-dasharray: 4 6;
-		stroke-width: 1;
+		stroke: rgba(36, 36, 36, 0.28);
+		stroke-dasharray: 3 7;
+		stroke-width: 1.3;
 	}
 
 	.candle-wick {
-		stroke: #172033;
-		stroke-width: 2;
+		stroke: rgba(36, 36, 36, 0.62);
+		stroke-width: 2.2;
 	}
 
 	.candle-body {
-		fill: rgba(15, 118, 110, 0.14);
-		stroke: #172033;
+		fill: rgba(214, 155, 45, 0.18);
+		stroke: rgba(36, 36, 36, 0.72);
 		stroke-width: 1.5;
 	}
 
@@ -1097,30 +1173,30 @@
 	}
 
 	.net-dot {
-		stroke: #0f766e;
+		stroke: #c98e24;
 	}
 
 	.coast-dot {
-		stroke: #2563eb;
+		stroke: #2f8f83;
 	}
 
 	.retire-dot {
-		stroke: #e11d48;
+		stroke: #be5b50;
 	}
 
 	.phase-dot {
-		stroke: #7c3aed;
+		stroke: #6d62b5;
 	}
 
 	.chart-tooltip rect {
-		fill: rgba(23, 32, 51, 0.94);
-		stroke: rgba(255, 255, 255, 0.16);
+		fill: rgba(36, 36, 36, 0.92);
+		stroke: rgba(255, 255, 255, 0.14);
 		stroke-width: 1;
 	}
 
 	.chart-tooltip text {
-		fill: #cbd5e1;
-		font-family: 'Courier New', Courier, monospace;
+		fill: rgba(255, 255, 255, 0.72);
+		font-family: inherit;
 		font-size: 12px;
 	}
 
@@ -1164,8 +1240,9 @@
 		justify-content: space-between;
 		gap: 0.75rem;
 		margin-top: 0.8rem;
-		color: #5d6678;
+		color: #77736b;
 		font-size: 0.78rem;
+		line-height: 1.5;
 	}
 
 	.chart-notes p {
@@ -1182,7 +1259,7 @@
 
 	.toggle input {
 		width: auto;
-		accent-color: #0f766e;
+		accent-color: #d69b2d;
 	}
 
 	.phase-list {
@@ -1199,9 +1276,9 @@
 		grid-template-columns: minmax(0, 1.25fr) 3.8rem 3.8rem minmax(0, 1.15fr);
 		align-items: end;
 		gap: 0.38rem;
-		border: 1px solid #e4eaf0;
-		border-radius: 8px;
-		background: #fbfdff;
+		border: 1px solid rgba(36, 36, 36, 0.07);
+		border-radius: 14px;
+		background: #fffaf1;
 		padding: 0.45rem;
 	}
 
@@ -1284,14 +1361,19 @@
 			display: none;
 		}
 
-		.button-row,
-		.phase-row {
+		.button-row {
+			display: grid;
 			grid-template-columns: 1fr;
 			width: 100%;
 		}
 
-		.button-row {
-			display: grid;
+		.phase-row {
+			grid-template-columns: minmax(0, 1fr) 4.5rem 4.5rem;
+			width: 100%;
+		}
+
+		.phase-contribution {
+			grid-column: 1 / -1;
 		}
 	}
 </style>
