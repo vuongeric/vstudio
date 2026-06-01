@@ -61,6 +61,10 @@
 		phases: defaultPhaseConfig.phases.map((phase) => ({ ...phase }))
 	});
 	let showingPhaseEditor = $state(false);
+	let hoveredIndex = $state<number | null>(null);
+	let isChartFullscreen = $state(false);
+	let isScrubbingChart = $state(false);
+	let chartSvg = $state<SVGSVGElement | null>(null);
 
 	const chartWidth = 920;
 	const chartHeight = 420;
@@ -235,6 +239,68 @@
 		return pad.left + (total <= 1 ? 0 : (index / (total - 1)) * plotWidth);
 	}
 
+	function indexForPointer(event: PointerEvent): number {
+		if (!chartSvg || projectionData.length <= 1) return 0;
+
+		const bounds = chartSvg.getBoundingClientRect();
+		const chartX = ((event.clientX - bounds.left) / bounds.width) * chartWidth;
+		const ratio = (chartX - pad.left) / plotWidth;
+		const index = Math.round(ratio * (projectionData.length - 1));
+		return Math.max(0, Math.min(projectionData.length - 1, index));
+	}
+
+	function scrubChart(event: PointerEvent): void {
+		event.preventDefault();
+		hoveredIndex = indexForPointer(event);
+	}
+
+	function startChartScrub(event: PointerEvent): void {
+		isScrubbingChart = true;
+		(event.currentTarget as SVGRectElement).setPointerCapture(event.pointerId);
+		scrubChart(event);
+	}
+
+	function moveChartScrub(event: PointerEvent): void {
+		if (event.pointerType === 'mouse' || isScrubbingChart) scrubChart(event);
+	}
+
+	function endChartScrub(event: PointerEvent): void {
+		const scrubber = event.currentTarget as SVGRectElement;
+		isScrubbingChart = false;
+		if (scrubber.hasPointerCapture(event.pointerId))
+			scrubber.releasePointerCapture(event.pointerId);
+	}
+
+	function leaveChartScrub(event: PointerEvent): void {
+		if (event.pointerType === 'mouse' && !isChartFullscreen) hoveredIndex = null;
+	}
+
+	function stepHoveredIndex(direction: -1 | 1): void {
+		const currentIndex = hoveredIndex ?? 0;
+		hoveredIndex = Math.max(0, Math.min(projectionData.length - 1, currentIndex + direction));
+	}
+
+	function handleWindowKeydown(event: KeyboardEvent): void {
+		if (event.key === 'Escape' && isChartFullscreen) {
+			isChartFullscreen = false;
+		}
+	}
+
+	function handleScrubKeydown(event: KeyboardEvent): void {
+		if (event.key === 'ArrowLeft') {
+			event.preventDefault();
+			stepHoveredIndex(-1);
+		}
+		if (event.key === 'ArrowRight') {
+			event.preventDefault();
+			stepHoveredIndex(1);
+		}
+		if (event.key === 'Escape' && isChartFullscreen) {
+			event.preventDefault();
+			isChartFullscreen = false;
+		}
+	}
+
 	let standardData = $derived(calculateProjection(inputs));
 	let phaseData = $derived(
 		phaseConfig.enabled ? calculateProjectionWithPhases(inputs, phaseConfig) : []
@@ -287,11 +353,38 @@
 			return index === 0 || index === projectionData.length - 1 || index % interval === 0;
 		})
 	);
+	let hoveredPoint = $derived(hoveredIndex == null ? null : projectionData[hoveredIndex]);
+	let tooltipX = $derived(
+		hoveredIndex == null
+			? 0
+			: Math.min(xFor(hoveredIndex, projectionData.length) + 16, chartWidth - pad.right - 208)
+	);
+	let tooltipY = $derived(
+		hoveredPoint == null
+			? 0
+			: Math.max(
+					pad.top + 10,
+					Math.min(
+						yFor(
+							Math.max(
+								hoveredPoint.netWorth,
+								hoveredPoint.retirementNumber,
+								hoveredPoint.coastFireNumber ?? 0,
+								hoveredPoint.phaseNetWorth ?? 0
+							),
+							yMax
+						) - 20,
+						chartHeight - pad.bottom - (phaseConfig.enabled ? 138 : 116)
+					)
+				)
+	);
 </script>
 
 <svelte:head>
 	<title>cofi</title>
 </svelte:head>
+
+<svelte:window onkeydown={handleWindowKeydown} />
 
 <div class="cofi-page">
 	<header class="intro">
@@ -449,21 +542,40 @@
 			</div>
 		</div>
 
-		<section class="panel chart-panel" aria-label="Financial projection chart">
+		<section
+			class="panel chart-panel"
+			class:fullscreen={isChartFullscreen}
+			aria-label="Financial projection chart"
+		>
 			<div class="panel-heading">
 				<h2>Projection</h2>
-				<div class="legend" aria-label="Chart legend">
-					<span><i class="net"></i>Net worth</span>
-					<span><i class="coast"></i>Coast FI</span>
-					<span><i class="retire"></i>Retirement target</span>
-					{#if phaseConfig.enabled}
-						<span><i class="phase"></i>6-phase</span>
-					{/if}
+				<div class="chart-actions">
+					<div class="legend" aria-label="Chart legend">
+						<span><i class="net"></i>Net worth</span>
+						<span><i class="coast"></i>Coast FI</span>
+						<span><i class="retire"></i>Retirement target</span>
+						{#if phaseConfig.enabled}
+							<span><i class="phase"></i>6-phase</span>
+						{/if}
+					</div>
+					<button
+						class="fullscreen-toggle"
+						type="button"
+						aria-label={isChartFullscreen ? 'Exit fullscreen chart' : 'Open fullscreen chart'}
+						aria-pressed={isChartFullscreen}
+						onclick={() => {
+							isChartFullscreen = !isChartFullscreen;
+							hoveredIndex ??= Math.max(0, projectionData.length - 1);
+						}}
+					>
+						{isChartFullscreen ? 'Close' : 'Fullscreen'}
+					</button>
 				</div>
 			</div>
 
 			<div class="chart-wrap">
 				<svg
+					bind:this={chartSvg}
 					viewBox={`0 0 ${chartWidth} ${chartHeight}`}
 					role="img"
 					aria-label="Projection line chart"
@@ -507,6 +619,104 @@
 							d={pathFor(projectionData, (point) => point.phaseNetWorth, yMax)}
 						/>
 					{/if}
+
+					{#if hoveredPoint != null && hoveredIndex != null}
+						{@const hoverX = xFor(hoveredIndex, projectionData.length)}
+						{@const netY = yFor(hoveredPoint.netWorth, yMax)}
+						{@const retireY = yFor(hoveredPoint.retirementNumber, yMax)}
+						{@const coastY =
+							hoveredPoint.coastFireNumber == null
+								? null
+								: yFor(hoveredPoint.coastFireNumber, yMax)}
+						{@const phaseY =
+							hoveredPoint.phaseNetWorth == null ? null : yFor(hoveredPoint.phaseNetWorth, yMax)}
+						{@const markerTop = Math.min(
+							netY,
+							retireY,
+							coastY ?? chartHeight,
+							phaseY ?? chartHeight
+						)}
+						{@const markerBottom = Math.max(netY, retireY, coastY ?? 0, phaseY ?? 0)}
+						<g class="hover-inspector" aria-hidden="true">
+							<line
+								class="hover-crosshair"
+								x1={hoverX}
+								x2={hoverX}
+								y1={pad.top}
+								y2={pad.top + plotHeight}
+							/>
+							<line class="candle-wick" x1={hoverX} x2={hoverX} y1={markerTop} y2={markerBottom} />
+							<rect
+								class="candle-body"
+								x={hoverX - 5}
+								y={Math.min(netY, retireY)}
+								width="10"
+								height={Math.max(8, Math.abs(netY - retireY))}
+								rx="2"
+							/>
+							<circle class="hover-dot net-dot" cx={hoverX} cy={netY} r="5" />
+							{#if coastY != null}
+								<circle class="hover-dot coast-dot" cx={hoverX} cy={coastY} r="4.5" />
+							{/if}
+							<circle class="hover-dot retire-dot" cx={hoverX} cy={retireY} r="4.5" />
+							{#if phaseConfig.enabled && phaseY != null}
+								<circle class="hover-dot phase-dot" cx={hoverX} cy={phaseY} r="5" />
+							{/if}
+							<g class="chart-tooltip" transform={`translate(${tooltipX}, ${tooltipY})`}>
+								<rect width="196" height={phaseConfig.enabled ? 128 : 106} rx="7" />
+								<text class="tooltip-title" x="12" y="22">Age {hoveredPoint.age}</text>
+								<text x="12" y="44">Net worth</text>
+								<text class="tooltip-value" x="184" y="44"
+									>{formatCurrency(hoveredPoint.netWorth)}</text
+								>
+								<text x="12" y="64">Coast FI</text>
+								<text class="tooltip-value" x="184" y="64">
+									{hoveredPoint.coastFireNumber == null
+										? 'Retired'
+										: formatCurrency(hoveredPoint.coastFireNumber)}
+								</text>
+								<text x="12" y="84">Target</text>
+								<text class="tooltip-value" x="184" y="84">
+									{formatCurrency(hoveredPoint.retirementNumber)}
+								</text>
+								{#if phaseConfig.enabled}
+									<text x="12" y="106">6-phase</text>
+									<text class="tooltip-value" x="184" y="106">
+										{hoveredPoint.phaseNetWorth == null
+											? 'n/a'
+											: formatCurrency(hoveredPoint.phaseNetWorth)}
+									</text>
+								{/if}
+							</g>
+						</g>
+					{/if}
+
+					<rect
+						class="scrub-zone"
+						x={pad.left}
+						y={pad.top}
+						width={plotWidth}
+						height={plotHeight}
+						tabindex="0"
+						role="slider"
+						aria-label="Projection year scrubber"
+						aria-valuemin={projectionData[0]?.age ?? inputs.currentAge}
+						aria-valuemax={finalPoint?.age ?? inputs.retirementAge}
+						aria-valuenow={hoveredPoint?.age ?? finalPoint?.age ?? inputs.currentAge}
+						aria-valuetext={hoveredPoint
+							? `Age ${hoveredPoint.age}, predicted net worth ${formatCurrency(hoveredPoint.netWorth)}`
+							: 'No year selected'}
+						onpointerdown={startChartScrub}
+						onpointermove={moveChartScrub}
+						onpointerup={endChartScrub}
+						onpointercancel={endChartScrub}
+						onpointerleave={leaveChartScrub}
+						onfocus={() => (hoveredIndex ??= 0)}
+						onblur={() => {
+							if (!isChartFullscreen) hoveredIndex = null;
+						}}
+						onkeydown={handleScrubKeydown}
+					/>
 				</svg>
 			</div>
 
@@ -652,13 +862,22 @@
 		margin-bottom: 0.9rem;
 	}
 
+	.chart-actions {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 0.8rem;
+		min-width: 0;
+	}
+
 	.button-row {
 		display: flex;
 		gap: 0.45rem;
 	}
 
 	.panel-heading button,
-	.phase-header button {
+	.phase-header button,
+	.fullscreen-toggle {
 		border: 1px solid #cbd5e1;
 		border-radius: 6px;
 		background: #f8fafc;
@@ -723,6 +942,7 @@
 		gap: 0.55rem 0.9rem;
 		color: #5d6678;
 		font-size: 0.72rem;
+		justify-content: flex-end;
 	}
 
 	.legend span {
@@ -758,6 +978,44 @@
 		border: 1px solid #eef2f7;
 		border-radius: 8px;
 		background: #fbfdff;
+	}
+
+	.chart-panel {
+		transition:
+			inset 0.32s ease,
+			border-radius 0.32s ease,
+			box-shadow 0.32s ease,
+			padding 0.32s ease;
+	}
+
+	.chart-panel.fullscreen {
+		position: fixed;
+		inset: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right))
+			max(0.75rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+		z-index: 20;
+		display: grid;
+		grid-template-rows: auto minmax(0, 1fr) auto;
+		background: #fff;
+		box-shadow: 0 24px 80px rgba(15, 23, 42, 0.26);
+		animation: chart-expand 0.32s ease both;
+	}
+
+	.chart-panel.fullscreen::before {
+		position: fixed;
+		inset: 0;
+		z-index: -1;
+		background: rgba(15, 23, 42, 0.34);
+		content: '';
+	}
+
+	.chart-panel.fullscreen .chart-wrap {
+		overflow: hidden;
+		min-height: 0;
+	}
+
+	.chart-panel.fullscreen svg {
+		min-width: 0;
+		height: 100%;
 	}
 
 	svg {
@@ -810,6 +1068,94 @@
 	.line.phase {
 		stroke: #7c3aed;
 		stroke-width: 5;
+	}
+
+	.hover-inspector {
+		pointer-events: none;
+	}
+
+	.hover-crosshair {
+		stroke: #94a3b8;
+		stroke-dasharray: 4 6;
+		stroke-width: 1;
+	}
+
+	.candle-wick {
+		stroke: #172033;
+		stroke-width: 2;
+	}
+
+	.candle-body {
+		fill: rgba(15, 118, 110, 0.14);
+		stroke: #172033;
+		stroke-width: 1.5;
+	}
+
+	.hover-dot {
+		fill: #fff;
+		stroke-width: 3;
+	}
+
+	.net-dot {
+		stroke: #0f766e;
+	}
+
+	.coast-dot {
+		stroke: #2563eb;
+	}
+
+	.retire-dot {
+		stroke: #e11d48;
+	}
+
+	.phase-dot {
+		stroke: #7c3aed;
+	}
+
+	.chart-tooltip rect {
+		fill: rgba(23, 32, 51, 0.94);
+		stroke: rgba(255, 255, 255, 0.16);
+		stroke-width: 1;
+	}
+
+	.chart-tooltip text {
+		fill: #cbd5e1;
+		font-family: 'Courier New', Courier, monospace;
+		font-size: 12px;
+	}
+
+	.chart-tooltip .tooltip-title {
+		fill: #fff;
+		font-size: 13px;
+		font-weight: 700;
+	}
+
+	.chart-tooltip .tooltip-value {
+		fill: #fff;
+		font-weight: 700;
+		text-anchor: end;
+	}
+
+	.scrub-zone {
+		fill: transparent;
+		cursor: crosshair;
+		touch-action: none;
+	}
+
+	.scrub-zone:focus {
+		outline: none;
+	}
+
+	@keyframes chart-expand {
+		from {
+			opacity: 0.92;
+			transform: scale(0.985);
+		}
+
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
 	}
 
 	.chart-notes {
@@ -906,6 +1252,36 @@
 		.chart-notes {
 			align-items: flex-start;
 			flex-direction: column;
+		}
+
+		.chart-actions {
+			align-items: flex-start;
+			flex-direction: column;
+			width: 100%;
+		}
+
+		.legend {
+			justify-content: flex-start;
+		}
+
+		.fullscreen-toggle {
+			width: 100%;
+		}
+
+		.chart-panel.fullscreen {
+			inset: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+				env(safe-area-inset-left);
+			border-radius: 0;
+			padding: 0.75rem;
+		}
+
+		.chart-panel.fullscreen .panel-heading {
+			gap: 0.65rem;
+			margin-bottom: 0.65rem;
+		}
+
+		.chart-panel.fullscreen .chart-notes {
+			display: none;
 		}
 
 		.button-row,
