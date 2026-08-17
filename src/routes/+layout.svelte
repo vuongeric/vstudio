@@ -15,9 +15,12 @@
 	];
 
 	$: currentPath = $page.url.pathname;
+	$: isBabyShower = currentPath === `${base}/baby-shower`;
+	$: isCafe = /\/cafe(?:\.html)?\/?$/.test(currentPath);
 </script>
 
 <div class="app">
+	{#if !isBabyShower && !isCafe}
 	<nav class="nav">
 		<div class="nav-container">
 			<a href={`${base}/`} class="logo">eric vuong</a>
@@ -72,16 +75,19 @@
 			</div>
 		{/if}
 	</nav>
+	{/if}
 
 	<main>
 		<slot />
 	</main>
 
+	{#if !isBabyShower && !isCafe}
 	<footer class="footer">
 		<div class="footer-content">
 			<p>all media (c) eric vuong</p>
 		</div>
 	</footer>
+	{/if}
 </div>
 
 <style>
