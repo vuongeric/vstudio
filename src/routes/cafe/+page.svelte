@@ -46,7 +46,7 @@
 			<div class="title-block">
 				<p class="kicker">VUONG CAFE · 小さな喫茶</p>
 				<h1 id="menu-title">Menu</h1>
-				<p class="subtitle">おしながき</p>
+				<p class="subtitle">メニューは変更になる場合があります</p>
 			</div>
 			<p class="season">Summer<span>2026</span></p>
 		</header>
@@ -224,8 +224,8 @@
 		margin: 1.4rem 0 0;
 		font-family: var(--serif);
 		font-size: 0.76rem;
-		letter-spacing: 0.52em;
-		transform: translateX(0.26em);
+		letter-spacing: 0.16em;
+		transform: translateX(0.08em);
 	}
 
 	.season {
