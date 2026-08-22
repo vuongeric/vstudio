@@ -7,6 +7,7 @@ node_modules
 .wrangler
 /.svelte-kit
 /build
+baby-shower-photos/
 
 # OS
 .DS_Store

@@ -2,34 +2,37 @@
 	const drinks = [
 		{
 			number: '01',
-			name: 'Hand Drip',
-			japanese: 'ハンドドリップ',
-			description: 'Ethiopian beans · brewed to order',
-			notes: 'LIGHT - FLORAL - CLARITY - STONEFRUIT - SWEET',
-			option: 'CLASSIC / FLASH BREW'
+			name: 'Espresso',
+			japanese: 'エスプレッソ',
+			variants: [
+				{ name: 'Latte', ingredients: 'milk' },
+				{ name: 'Americano', ingredients: 'water' },
+				{ name: 'Salty Canadian', ingredients: 'maple syrup, milk, butter, salt' }
+			],
+			extra: 'HOT / ICED'
 		},
 		{
 			number: '02',
 			name: 'Matcha Latte',
 			japanese: '抹茶ラテ',
 			description: 'Ceremonial matcha · milk or oat · syrup',
-			notes: 'ICED',
-			extra: 'Ice cream topping available'
+			notes: 'ICED'
 		},
 		{
 			number: '03',
 			name: 'SAN "G"',
 			japanese: 'グァバ・ぶどう・ジャスミン',
-			description: 'Guava · green grape · jasmine tea',
-			notes: 'Slush'
+			description: 'Guava · green grape · jasmine tea'
 		},
 		{
 			number: '04',
-			name: 'Espresso',
-			japanese: 'エスプレッソ',
-			description: 'Latte · Americano',
-			notes: '',
-			option: 'HOT / ICED'
+			name: 'Hand Drip',
+			japanese: 'ハンドドリップ',
+			description: 'Single origin beans',
+			origin: 'Ethiopia featured',
+			notes: 'LIGHT - FLORAL - CLARITY - STONEFRUIT - SWEET',
+			wait: 'PLEASE ALLOW 8–10 MINUTES',
+			extra: 'CLASSIC / FLASHBREW'
 		}
 	];
 </script>
@@ -64,22 +67,39 @@
 						</div>
 					</div>
 					<div class="item-details">
-						<p>{drink.description}</p>
+						{#if drink.variants}
+							<ul class="menu-variants">
+								{#each drink.variants as variant}
+									<li><strong>{variant.name}</strong> <span>{variant.ingredients}</span></li>
+								{/each}
+							</ul>
+						{:else}
+							<p>{drink.description}</p>
+							{#if drink.origin}<p>{drink.origin}</p>{/if}
+						{/if}
 						{#if drink.notes}<p>{drink.notes}</p>{/if}
-						{#if drink.option}<p class="item-option">{drink.option}</p>{/if}
+						{#if drink.wait}<p class="wait-time">{drink.wait}</p>{/if}
 					</div>
 					{#if drink.extra}<p class="extra">{drink.extra}</p>{/if}
 				</article>
 			{/each}
 		</section>
 
-		<section class="bakery-section" aria-labelledby="bakery-title">
-			<div class="section-label">
-				<p>Bakery</p>
-				<p id="bakery-title">焼きもの</p>
-			</div>
+		<section class="bakery-section" aria-label="Baked goods menu">
 			<article class="bakery-item">
 				<p class="item-number">05</p>
+				<div class="item-heading">
+					<div>
+						<h2>Focaccia</h2>
+						<p class="japanese">フォカッチャ</p>
+					</div>
+				</div>
+				<div class="item-details bakery-details">
+					<p>Olive oil · flour</p>
+				</div>
+			</article>
+			<article class="bakery-item">
+				<p class="item-number">06</p>
 				<div class="item-heading">
 					<div>
 						<h2>Salted Bread</h2>
@@ -88,7 +108,6 @@
 				</div>
 				<div class="item-details bakery-details">
 					<p>Cultured butter · sea salt</p>
-					<p>Baked in small batches</p>
 				</div>
 			</article>
 		</section>
@@ -318,10 +337,30 @@
 		margin: 0;
 	}
 
-	.item-details .item-option {
+	.item-details .wait-time {
 		margin-top: 0.65rem;
 		color: var(--ink);
+		font-weight: 500;
+	}
+
+	.menu-variants {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.menu-variants li + li {
+		margin-top: 0.45rem;
+	}
+
+	.menu-variants strong {
+		color: var(--ink);
 		font-weight: 600;
+	}
+
+	.menu-variants span {
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
 	}
 
 	.extra {
@@ -337,29 +376,14 @@
 		border-bottom: 1px solid var(--rule);
 	}
 
-	.section-label {
+	.bakery-item {
+		min-height: 13rem;
 		padding: 2.55rem 2.75rem 2.35rem 0;
 	}
 
-	.section-label p {
-		margin: 0;
-		font-family: var(--serif);
-		font-size: 1rem;
-		letter-spacing: 0.08em;
-		line-height: 1.4;
-		text-transform: uppercase;
-	}
-
-	.section-label p:last-child {
-		margin-top: 0.35rem;
-		color: var(--muted-ink);
-		font-family: var(--sans);
-		font-size: 0.48rem;
-		letter-spacing: 0.22em;
-	}
-
-	.bakery-item {
-		padding: 2.55rem 0 2.35rem 2.75rem;
+	.bakery-item + .bakery-item {
+		padding-right: 0;
+		padding-left: 2.75rem;
 		border-left: 1px solid var(--rule);
 	}
 
@@ -467,16 +491,13 @@
 			font-size: 0.42rem;
 		}
 
-		.section-label {
+		.bakery-item {
 			padding: 2rem 1.25rem 1.8rem 0;
 		}
 
-		.section-label p {
-			font-size: 0.8rem;
-		}
-
-		.bakery-item {
-			padding: 2rem 0 1.8rem 1.25rem;
+		.bakery-item + .bakery-item {
+			padding-right: 0;
+			padding-left: 1.25rem;
 		}
 	}
 
@@ -498,13 +519,15 @@
 			gap: 1.25rem;
 		}
 
-		.section-label {
-			padding: 1.5rem 0 0;
+		.bakery-item,
+		.bakery-item + .bakery-item {
+			min-height: auto;
+			padding: 2rem 0;
+			border-left: 0;
 		}
 
-		.bakery-item {
-			padding: 1.35rem 0 2rem;
-			border-left: 0;
+		.bakery-item + .bakery-item {
+			border-top: 1px solid var(--rule);
 		}
 
 		.wordmark {
