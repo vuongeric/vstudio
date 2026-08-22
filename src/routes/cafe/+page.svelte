@@ -2,17 +2,17 @@
 	const drinks = [
 		{
 			number: '01',
+			name: 'Salty Canadian',
+			japanese: 'ソルティ・カナディアン',
+			description: 'Maple syrup · milk · buttermilk · salt',
+			extra: 'HOT / ICED'
+		},
+		{
+			number: '02',
 			name: 'Matcha Latte',
 			japanese: '抹茶ラテ',
 			description: 'Ceremonial matcha · milk or oat · syrup',
 			notes: 'ICED'
-		},
-		{
-			number: '02',
-			name: 'Latte',
-			japanese: 'ラテ',
-			description: 'Milk / oat milk',
-			extra: 'HOT / ICED'
 		},
 		{
 			number: '03',
@@ -28,19 +28,6 @@
 			notes: 'WE TASTE: LIGHT - FLORAL - CLARITY - SWEET',
 			wait: '8–10 MINUTES WAIT TIME',
 			extra: 'CLASSIC / FLASHBREW'
-		},
-		{
-			number: '05',
-			name: 'Americano',
-			japanese: 'アメリカーノ',
-			extra: 'HOT / ICED'
-		},
-		{
-			number: '06',
-			name: 'Salty Canadian',
-			japanese: 'ソルティ・カナディアン',
-			description: 'Maple syrup · milk · buttermilk · salt',
-			extra: 'HOT / ICED'
 		}
 	];
 </script>
@@ -81,6 +68,33 @@
 					{#if drink.extra}<p class="extra">{drink.extra}</p>{/if}
 				</article>
 			{/each}
+		</section>
+
+		<section class="bakery-section" aria-label="Baked goods menu">
+			<article class="bakery-item">
+				<p class="item-number">05</p>
+				<div class="item-heading">
+					<div>
+						<h2>Focaccia</h2>
+						<p class="japanese">フォカッチャ</p>
+					</div>
+				</div>
+				<div class="item-details bakery-details">
+					<p>Olive oil · flour</p>
+				</div>
+			</article>
+			<article class="bakery-item">
+				<p class="item-number">06</p>
+				<div class="item-heading">
+					<div>
+						<h2>Salted Bread</h2>
+						<p class="japanese">塩パン</p>
+					</div>
+				</div>
+				<div class="item-details bakery-details">
+					<p>Cultured butter · sea salt</p>
+				</div>
+			</article>
 		</section>
 
 		<footer class="menu-footer">
@@ -223,7 +237,8 @@
 		background: var(--rule);
 	}
 
-	.menu-grid {
+	.menu-grid,
+	.bakery-section {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
@@ -307,6 +322,29 @@
 		border: 1px solid var(--rule);
 		border-radius: 999px;
 		font-size: 0.48rem;
+	}
+
+	.bakery-section {
+		border-bottom: 1px solid var(--rule);
+	}
+
+	.bakery-item {
+		min-height: 13rem;
+		padding: 2.55rem 2.75rem 2.35rem 0;
+	}
+
+	.bakery-item + .bakery-item {
+		padding-right: 0;
+		padding-left: 2.75rem;
+		border-left: 1px solid var(--rule);
+	}
+
+	.bakery-item .item-number {
+		margin-bottom: 1.25rem;
+	}
+
+	.bakery-details {
+		margin-top: 1.3rem;
 	}
 
 	.menu-footer {
@@ -398,6 +436,15 @@
 			margin-top: 0.9rem;
 			font-size: 0.42rem;
 		}
+
+		.bakery-item {
+			padding: 2rem 1.25rem 1.8rem 0;
+		}
+
+		.bakery-item + .bakery-item {
+			padding-right: 0;
+			padding-left: 1.25rem;
+		}
 	}
 
 	@media (max-width: 440px) {
@@ -415,6 +462,21 @@
 		.menu-footer {
 			grid-template-columns: 1fr;
 			gap: 1.25rem;
+		}
+
+		.bakery-section {
+			grid-template-columns: 1fr;
+		}
+
+		.bakery-item,
+		.bakery-item + .bakery-item {
+			min-height: auto;
+			padding: 2rem 0;
+			border-left: 0;
+		}
+
+		.bakery-item + .bakery-item {
+			border-top: 1px solid var(--rule);
 		}
 
 		.wordmark {
