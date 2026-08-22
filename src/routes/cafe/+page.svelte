@@ -29,8 +29,8 @@
 			name: 'Hand Drip',
 			japanese: 'ハンドドリップ',
 			description: 'Light roasted single origin beans',
-			notes: 'LIGHT - FLORAL - CLARITY - SWEET',
-			wait: 'PLEASE ALLOW 8–10 MINUTES',
+			notes: 'WE TASTE: LIGHT - FLORAL - CLARITY - SWEET',
+			wait: '8–10 MINUTES WAIT TIME',
 			extra: 'CLASSIC / FLASHBREW'
 		}
 	];
