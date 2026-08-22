@@ -4,11 +4,7 @@
 			number: '01',
 			name: 'Espresso',
 			japanese: 'エスプレッソ',
-			variants: [
-				{ name: 'Latte', ingredients: 'milk' },
-				{ name: 'Americano', ingredients: 'water' },
-				{ name: 'Salty Canadian', ingredients: 'maple syrup, milk, butter, salt' }
-			],
+			variants: ['Latte', 'Americano', 'Salty Canadian'],
 			extra: 'HOT / ICED'
 		},
 		{
@@ -68,7 +64,7 @@
 						{#if drink.variants}
 							<ul class="menu-variants">
 								{#each drink.variants as variant}
-									<li><strong>{variant.name}</strong> <span>{variant.ingredients}</span></li>
+									<li><strong>{variant}</strong></li>
 								{/each}
 							</ul>
 						{:else}
@@ -340,11 +336,6 @@
 	.menu-variants strong {
 		color: var(--ink);
 		font-weight: 600;
-	}
-
-	.menu-variants span {
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
 	}
 
 	.extra {
