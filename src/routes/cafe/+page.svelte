@@ -38,16 +38,15 @@
 </script>
 
 <svelte:head>
-	<title>VUONG CAFE — Menu</title>
-	<meta name="description" content="A quiet, Japandi-inspired menu for VUONG CAFE." />
+	<title>SERA CAFE — Menu</title>
+	<meta name="description" content="A quiet, Japandi-inspired menu for SERA CAFE." />
 </svelte:head>
 
 <main class="cafe-shell">
 	<article class="menu-sheet" aria-labelledby="menu-title">
 		<header class="menu-header">
-			<div class="house-mark" aria-hidden="true"><span>V</span></div>
 			<div class="title-block">
-				<p class="kicker">VUONG CAFE · 小さな喫茶</p>
+				<p class="kicker">SERA CAFE · 小さな喫茶</p>
 				<h1 id="menu-title">Menu</h1>
 				<p class="subtitle">メニューは変更になる場合があります</p>
 			</div>
@@ -118,7 +117,7 @@
 				<p>日本語で書くなら、なんで翻訳っぽい日本語なの？</p>
 			</div>
 			<div class="wordmark">
-				<strong>VUONG CAFE</strong>
+				<strong>SERA CAFE</strong>
 				<span>WITH CARE</span>
 			</div>
 		</footer>
@@ -192,22 +191,8 @@
 		min-height: 12.5rem;
 	}
 
-	.house-mark {
-		width: 2.6rem;
-		height: 2.6rem;
-		display: grid;
-		place-items: center;
-		border: 1px solid var(--ink);
-		border-radius: 50%;
-		font-family: var(--serif);
-		font-size: 1.05rem;
-	}
-
-	.house-mark span {
-		transform: translateY(-0.04em);
-	}
-
 	.title-block {
+		grid-column: 2;
 		text-align: center;
 	}
 
@@ -248,6 +233,7 @@
 	}
 
 	.season {
+		grid-column: 3;
 		justify-self: end;
 		margin: 0.65rem 0 0;
 		font-size: 0.55rem;
@@ -443,12 +429,6 @@
 		.menu-header {
 			grid-template-columns: 3.5rem 1fr 3.5rem;
 			min-height: 10rem;
-		}
-
-		.house-mark {
-			width: 2.15rem;
-			height: 2.15rem;
-			font-size: 0.85rem;
 		}
 
 		.kicker {
