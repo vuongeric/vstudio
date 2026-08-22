@@ -2,17 +2,17 @@
 	const drinks = [
 		{
 			number: '01',
-			name: 'Espresso',
-			japanese: 'エスプレッソ',
-			variants: ['Latte', 'Americano', 'Salty Canadian'],
-			extra: 'HOT / ICED'
-		},
-		{
-			number: '02',
 			name: 'Matcha Latte',
 			japanese: '抹茶ラテ',
 			description: 'Ceremonial matcha · milk or oat · syrup',
 			notes: 'ICED'
+		},
+		{
+			number: '02',
+			name: 'Latte',
+			japanese: 'ラテ',
+			description: 'Milk / oat milk',
+			extra: 'HOT / ICED'
 		},
 		{
 			number: '03',
@@ -28,6 +28,19 @@
 			notes: 'WE TASTE: LIGHT - FLORAL - CLARITY - SWEET',
 			wait: '8–10 MINUTES WAIT TIME',
 			extra: 'CLASSIC / FLASHBREW'
+		},
+		{
+			number: '05',
+			name: 'Americano',
+			japanese: 'アメリカーノ',
+			extra: 'HOT / ICED'
+		},
+		{
+			number: '06',
+			name: 'Salty Canadian',
+			japanese: 'ソルティ・カナディアン',
+			description: 'Maple syrup · milk · buttermilk · salt',
+			extra: 'HOT / ICED'
 		}
 	];
 </script>
@@ -61,48 +74,13 @@
 						</div>
 					</div>
 					<div class="item-details">
-						{#if drink.variants}
-							<ul class="menu-variants">
-								{#each drink.variants as variant}
-									<li><strong>{variant}</strong></li>
-								{/each}
-							</ul>
-						{:else}
-							<p>{drink.description}</p>
-						{/if}
+						{#if drink.description}<p>{drink.description}</p>{/if}
 						{#if drink.notes}<p>{drink.notes}</p>{/if}
 						{#if drink.wait}<p class="wait-time">{drink.wait}</p>{/if}
 					</div>
 					{#if drink.extra}<p class="extra">{drink.extra}</p>{/if}
 				</article>
 			{/each}
-		</section>
-
-		<section class="bakery-section" aria-label="Baked goods menu">
-			<article class="bakery-item">
-				<p class="item-number">05</p>
-				<div class="item-heading">
-					<div>
-						<h2>Focaccia</h2>
-						<p class="japanese">フォカッチャ</p>
-					</div>
-				</div>
-				<div class="item-details bakery-details">
-					<p>Olive oil · flour</p>
-				</div>
-			</article>
-			<article class="bakery-item">
-				<p class="item-number">06</p>
-				<div class="item-heading">
-					<div>
-						<h2>Salted Bread</h2>
-						<p class="japanese">塩パン</p>
-					</div>
-				</div>
-				<div class="item-details bakery-details">
-					<p>Cultured butter · sea salt</p>
-				</div>
-			</article>
 		</section>
 
 		<footer class="menu-footer">
@@ -245,8 +223,7 @@
 		background: var(--rule);
 	}
 
-	.menu-grid,
-	.bakery-section {
+	.menu-grid {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
@@ -323,21 +300,6 @@
 		font-weight: 500;
 	}
 
-	.menu-variants {
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	.menu-variants li + li {
-		margin-top: 0.45rem;
-	}
-
-	.menu-variants strong {
-		color: var(--ink);
-		font-weight: 600;
-	}
-
 	.extra {
 		display: inline-block;
 		margin: 1.35rem 0 0;
@@ -345,29 +307,6 @@
 		border: 1px solid var(--rule);
 		border-radius: 999px;
 		font-size: 0.48rem;
-	}
-
-	.bakery-section {
-		border-bottom: 1px solid var(--rule);
-	}
-
-	.bakery-item {
-		min-height: 13rem;
-		padding: 2.55rem 2.75rem 2.35rem 0;
-	}
-
-	.bakery-item + .bakery-item {
-		padding-right: 0;
-		padding-left: 2.75rem;
-		border-left: 1px solid var(--rule);
-	}
-
-	.bakery-item .item-number {
-		margin-bottom: 1.25rem;
-	}
-
-	.bakery-details {
-		margin-top: 1.3rem;
 	}
 
 	.menu-footer {
@@ -459,20 +398,10 @@
 			margin-top: 0.9rem;
 			font-size: 0.42rem;
 		}
-
-		.bakery-item {
-			padding: 2rem 1.25rem 1.8rem 0;
-		}
-
-		.bakery-item + .bakery-item {
-			padding-right: 0;
-			padding-left: 1.25rem;
-		}
 	}
 
 	@media (max-width: 440px) {
-		.menu-grid,
-		.bakery-section {
+		.menu-grid {
 			grid-template-columns: 1fr;
 		}
 
@@ -486,17 +415,6 @@
 		.menu-footer {
 			grid-template-columns: 1fr;
 			gap: 1.25rem;
-		}
-
-		.bakery-item,
-		.bakery-item + .bakery-item {
-			min-height: auto;
-			padding: 2rem 0;
-			border-left: 0;
-		}
-
-		.bakery-item + .bakery-item {
-			border-top: 1px solid var(--rule);
 		}
 
 		.wordmark {
