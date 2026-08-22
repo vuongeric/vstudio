@@ -28,9 +28,8 @@
 			number: '04',
 			name: 'Hand Drip',
 			japanese: 'ハンドドリップ',
-			description: 'Single origin beans',
-			origin: 'Ethiopia featured',
-			notes: 'LIGHT - FLORAL - CLARITY - STONEFRUIT - SWEET',
+			description: 'Light roasted single origin beans',
+			notes: 'LIGHT - FLORAL - CLARITY - SWEET',
 			wait: 'PLEASE ALLOW 8–10 MINUTES',
 			extra: 'CLASSIC / FLASHBREW'
 		}
@@ -74,7 +73,6 @@
 							</ul>
 						{:else}
 							<p>{drink.description}</p>
-							{#if drink.origin}<p>{drink.origin}</p>{/if}
 						{/if}
 						{#if drink.notes}<p>{drink.notes}</p>{/if}
 						{#if drink.wait}<p class="wait-time">{drink.wait}</p>{/if}
