@@ -48,11 +48,13 @@
 			</div>
 
 			<aside class="qr-panel" aria-label="Instagram QR code">
-				<img
-					class="qr-image"
-					src={`${base}/cafe-qr/foodlovereric-instagram-qr.jpeg`}
-					alt="Instagram QR code for @foodlovereric"
-				/>
+				<div class="qr-frame">
+					<img
+						class="qr-image"
+						src={`${base}/cafe-qr/foodlovereric-instagram-qr.jpeg`}
+						alt="Instagram QR code for @foodlovereric"
+					/>
+				</div>
 			</aside>
 		</header>
 
@@ -273,11 +275,22 @@
 		justify-content: center;
 	}
 
-	.qr-image {
+	.qr-frame {
 		display: block;
 		width: min(100%, 10.5rem);
 		aspect-ratio: 1;
+		overflow: hidden;
+		border-radius: 1.2rem;
+		background: #fff;
+	}
+
+	.qr-image {
+		display: block;
+		width: 100%;
+		height: 100%;
 		object-fit: contain;
+		transform: scale(1.2);
+		transform-origin: center;
 	}
 
 	@media (max-width: 760px) {
@@ -302,7 +315,7 @@
 			padding-left: 1.5rem;
 		}
 
-		.qr-image {
+		.qr-frame {
 			width: min(100%, 8rem);
 		}
 	}
