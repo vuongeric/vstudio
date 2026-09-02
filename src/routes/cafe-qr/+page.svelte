@@ -1,4 +1,6 @@
 <script>
+	import { base } from '$app/paths';
+
 	const drinks = [
 		{
 			number: '01',
@@ -45,12 +47,12 @@
 				<p class="subtitle">メニューは変更になる場合があります</p>
 			</div>
 
-			<aside class="qr-panel" aria-label="QR code placeholder">
-				<div class="qr-placeholder" role="img" aria-label="QR code image coming soon">
-					<span>QR CODE</span>
-					<small>PLACEHOLDER</small>
-				</div>
-				<p class="qr-note">QR IMAGE TO BE ADDED</p>
+			<aside class="qr-panel" aria-label="Instagram QR code">
+				<img
+					class="qr-image"
+					src={`${base}/cafe-qr/foodlovereric-instagram-qr.jpeg`}
+					alt="Instagram QR code for @foodlovereric"
+				/>
 			</aside>
 		</header>
 
@@ -158,9 +160,7 @@
 	.japanese,
 	.item-details,
 	.extra,
-	footer,
-	.qr-note,
-	.qr-placeholder {
+	footer {
 		text-transform: uppercase;
 		letter-spacing: 0.16em;
 	}
@@ -273,63 +273,11 @@
 		justify-content: center;
 	}
 
-	.qr-placeholder {
-		position: relative;
-		display: grid;
-		width: min(100%, 9rem);
-		aspect-ratio: 1;
-		margin: 0 0 0.85rem;
-		place-content: center;
-		border: 1px dashed var(--rule);
-		color: var(--muted-ink);
-		text-align: center;
-	}
-
-	.qr-placeholder::before,
-	.qr-placeholder::after {
-		content: '';
-		position: absolute;
-		width: 2rem;
-		height: 2rem;
-		border-color: var(--ink);
-	}
-
-	.qr-placeholder::before {
-		top: 0.7rem;
-		left: 0.7rem;
-		border-top: 3px solid;
-		border-left: 3px solid;
-	}
-
-	.qr-placeholder::after {
-		right: 0.7rem;
-		bottom: 0.7rem;
-		border-right: 3px solid;
-		border-bottom: 3px solid;
-	}
-
-	.qr-placeholder span,
-	.qr-placeholder small {
+	.qr-image {
 		display: block;
-	}
-
-	.qr-placeholder span {
-		font-family: var(--serif);
-		font-size: 1rem;
-		letter-spacing: 0.12em;
-	}
-
-	.qr-placeholder small {
-		margin-top: 0.45rem;
-		font-size: 0.4rem;
-	}
-
-	.qr-note {
-		width: 100%;
-		margin: 0;
-		color: var(--muted-ink);
-		font-size: 0.43rem;
-		text-align: center;
+		width: min(100%, 10.5rem);
+		aspect-ratio: 1;
+		object-fit: contain;
 	}
 
 	@media (max-width: 760px) {
@@ -354,9 +302,8 @@
 			padding-left: 1.5rem;
 		}
 
-		.qr-placeholder {
-			width: min(100%, 7.5rem);
-			margin: 0 0 0.7rem;
+		.qr-image {
+			width: min(100%, 8rem);
 		}
 	}
 
