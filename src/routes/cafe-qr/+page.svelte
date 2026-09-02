@@ -4,9 +4,9 @@
 	const drinks = [
 		{
 			number: '01',
-			name: 'Matcha Latte',
-			description: 'Ceremonial matcha · milk or oat · syrup',
-			notes: 'ICED'
+			name: 'Salty Canadian',
+			description: 'Maple syrup · milk · buttermilk · salt',
+			extra: 'HOT / ICED'
 		},
 		{
 			number: '02',
@@ -15,15 +15,14 @@
 		},
 		{
 			number: '03',
-			name: 'Salty Canadian',
-			description: 'Maple syrup · milk · buttermilk · salt',
-			extra: 'HOT / ICED'
+			name: 'Matcha Latte',
+			description: 'Ceremonial matcha · milk or oat · syrup',
+			notes: 'ICED'
 		},
 		{
 			number: '04',
 			name: 'Espresso',
 			description: 'Latte · Americano',
-			notes: 'SWEETENER PROVIDED',
 			extra: 'HOT / COLD'
 		}
 	];
