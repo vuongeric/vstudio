@@ -15,7 +15,7 @@ const config = {
 		},
 		// Enable prerendering for better performance
 		prerender: {
-			entries: ['/', '/kit', '/2026-02-11', '/countdown', '/cofi', '/chloe', '/baby-shower', '/cafe'],
+			entries: ['/', '/kit', '/2026-02-11', '/countdown', '/cofi', '/chloe', '/baby-shower', '/cafe', '/cafe-qr'],
 			handleHttpError: 'warn'
 		}
 	}

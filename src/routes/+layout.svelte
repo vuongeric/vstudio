@@ -16,7 +16,7 @@
 
 	$: currentPath = $page.url.pathname;
 	$: isBabyShower = currentPath === `${base}/baby-shower`;
-	$: isCafe = /\/cafe(?:\.html)?\/?$/.test(currentPath);
+	$: isCafe = /\/cafe(?:-qr)?(?:\.html)?\/?$/.test(currentPath);
 </script>
 
 <div class="app">
