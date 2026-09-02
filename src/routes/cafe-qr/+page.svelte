@@ -38,9 +38,7 @@
 	<article class="menu-sheet" aria-labelledby="menu-title">
 		<header class="top-row">
 			<div class="menu-header">
-				<p class="eyebrow">MENU / 01—04</p>
 				<h1 id="menu-title">Menu</h1>
-				<p class="edition">COFFEE · MATCHA · SEASONAL</p>
 			</div>
 
 			<aside class="qr-panel" aria-label="Instagram QR code">
@@ -53,8 +51,6 @@
 				</div>
 			</aside>
 		</header>
-
-		<div class="rule"></div>
 
 		<section class="menu-grid" aria-label="Drink menu">
 			{#each drinks as drink}
@@ -95,7 +91,6 @@
 		--muted-ink: #66655f;
 		--paper: #f7f6f0;
 		--rule: #c8c6bc;
-		--accent: #a60072;
 		--sans: 'Helvetica Neue', 'Apple SD Gothic Neo', Arial, sans-serif;
 		min-height: 100vh;
 		display: grid;
@@ -135,37 +130,15 @@
 	}
 
 	.menu-header {
-		position: relative;
 		min-width: 0;
-		padding-left: 1.15rem;
 	}
 
-	.menu-header::before {
-		content: '';
-		position: absolute;
-		top: 0.15rem;
-		bottom: 0.15rem;
-		left: 0;
-		width: 3px;
-		background: var(--accent);
-	}
-
-	.eyebrow,
-	.edition,
 	.item-number,
 	.item-details,
 	.extra,
 	footer {
 		text-transform: uppercase;
 		letter-spacing: 0.16em;
-	}
-
-	.eyebrow {
-		margin: 0 0 1.2rem;
-		color: var(--accent);
-		font-size: 0.57rem;
-		font-weight: 700;
-		letter-spacing: 0.22em;
 	}
 
 	h1 {
@@ -176,18 +149,6 @@
 		letter-spacing: -0.075em;
 		line-height: 0.82;
 		text-transform: uppercase;
-	}
-
-	.edition {
-		margin: 1.35rem 0 0;
-		color: var(--muted-ink);
-		font-size: 0.46rem;
-		font-weight: 600;
-	}
-
-	.rule {
-		height: 2px;
-		background: var(--ink);
 	}
 
 	.menu-grid {
@@ -211,7 +172,7 @@
 
 	.item-number {
 		margin: 0 0 1.8rem;
-		color: var(--accent);
+		color: var(--muted-ink);
 		font-size: 0.55rem;
 		font-weight: 700;
 	}
@@ -249,9 +210,9 @@
 		display: inline-block;
 		margin: 1.15rem 0 0;
 		padding: 0.43rem 0.62rem;
-		border: 1px solid var(--accent);
+		border: 1px solid var(--rule);
 		border-radius: 2px;
-		color: var(--accent);
+		color: var(--ink);
 		font-size: 0.44rem;
 		font-weight: 700;
 	}
