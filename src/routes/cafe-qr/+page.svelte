@@ -5,27 +5,23 @@
 		{
 			number: '01',
 			name: 'Matcha Latte',
-			japanese: '抹茶ラテ',
 			description: 'Ceremonial matcha · milk or oat · syrup',
 			notes: 'ICED'
 		},
 		{
 			number: '02',
 			name: 'SAN “G”',
-			japanese: 'グァバ・ぶどう・ジャスミン',
 			description: 'Guava · green grape · jasmine tea'
 		},
 		{
 			number: '03',
 			name: 'Salty Canadian',
-			japanese: 'ソルティ・カナディアン',
 			description: 'Maple syrup · milk · buttermilk · salt',
 			extra: 'HOT / ICED'
 		},
 		{
 			number: '04',
 			name: 'Espresso',
-			japanese: 'エスプレッソ',
 			description: 'Latte · Americano',
 			notes: 'SWEETENER PROVIDED',
 			extra: 'HOT / COLD'
@@ -42,9 +38,8 @@
 	<article class="menu-sheet" aria-labelledby="menu-title">
 		<header class="top-row">
 			<div class="menu-header">
-				<p class="eyebrow">DRINKS · お飲みもの</p>
+				<p class="eyebrow">DRINKS</p>
 				<h1 id="menu-title">Menu</h1>
-				<p class="subtitle">メニューは変更になる場合があります</p>
 			</div>
 
 			<aside class="qr-panel" aria-label="Instagram QR code">
@@ -65,7 +60,6 @@
 				<article class="menu-item">
 					<p class="item-number">{drink.number}</p>
 					<h2>{drink.name}</h2>
-					<p class="japanese">{drink.japanese}</p>
 					<div class="item-details">
 						<p>{drink.description}</p>
 						{#if drink.notes}<p>{drink.notes}</p>{/if}
@@ -77,7 +71,6 @@
 
 		<footer>
 			<p>Prepared with care, one cup at a time.</p>
-			<p>日本語で書くなら、なんで翻訳っぽい日本語なの？</p>
 		</footer>
 	</article>
 </main>
@@ -157,9 +150,7 @@
 	}
 
 	.eyebrow,
-	.subtitle,
 	.item-number,
-	.japanese,
 	.item-details,
 	.extra,
 	footer {
@@ -180,12 +171,6 @@
 		font-weight: 400;
 		letter-spacing: -0.055em;
 		line-height: 0.9;
-	}
-
-	.subtitle {
-		margin: 1.15rem 0 0;
-		color: var(--muted-ink);
-		font-size: 0.48rem;
 	}
 
 	.rule {
@@ -227,13 +212,6 @@
 		letter-spacing: -0.025em;
 		line-height: 1.05;
 		text-transform: uppercase;
-	}
-
-	.japanese {
-		margin: 0.6rem 0 0;
-		color: var(--muted-ink);
-		font-size: 0.47rem;
-		line-height: 1.6;
 	}
 
 	.item-details {
