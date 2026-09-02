@@ -38,48 +38,43 @@
 
 <main class="menu-shell">
 	<article class="menu-sheet" aria-labelledby="menu-title">
-		<section class="menu-column">
-			<header class="menu-header">
+		<header class="top-row">
+			<div class="menu-header">
 				<p class="eyebrow">DRINKS · お飲みもの</p>
 				<h1 id="menu-title">Menu</h1>
 				<p class="subtitle">メニューは変更になる場合があります</p>
-			</header>
+			</div>
 
-			<div class="rule"></div>
+			<aside class="qr-panel" aria-label="QR code placeholder">
+				<div class="qr-placeholder" role="img" aria-label="QR code image coming soon">
+					<span>QR CODE</span>
+					<small>PLACEHOLDER</small>
+				</div>
+				<p class="qr-note">QR IMAGE TO BE ADDED</p>
+			</aside>
+		</header>
 
-			<section class="menu-grid" aria-label="Drink menu">
-				{#each drinks as drink}
-					<article class="menu-item">
-						<p class="item-number">{drink.number}</p>
-						<h2>{drink.name}</h2>
-						<p class="japanese">{drink.japanese}</p>
-						<div class="item-details">
-							<p>{drink.description}</p>
-							{#if drink.notes}<p>{drink.notes}</p>{/if}
-						</div>
-						{#if drink.extra}<p class="extra">{drink.extra}</p>{/if}
-					</article>
-				{/each}
-			</section>
+		<div class="rule"></div>
 
-			<footer>
-				<p>Prepared with care, one cup at a time.</p>
-				<p>日本語で書くなら、なんで翻訳っぽい日本語なの？</p>
-			</footer>
+		<section class="menu-grid" aria-label="Drink menu">
+			{#each drinks as drink}
+				<article class="menu-item">
+					<p class="item-number">{drink.number}</p>
+					<h2>{drink.name}</h2>
+					<p class="japanese">{drink.japanese}</p>
+					<div class="item-details">
+						<p>{drink.description}</p>
+						{#if drink.notes}<p>{drink.notes}</p>{/if}
+					</div>
+					{#if drink.extra}<p class="extra">{drink.extra}</p>{/if}
+				</article>
+			{/each}
 		</section>
 
-		<aside class="qr-panel" aria-label="QR code placeholder">
-			<div class="qr-copy">
-				<p class="qr-number">05</p>
-				<h2>Scan</h2>
-				<p class="japanese">詳しくはこちら</p>
-			</div>
-			<div class="qr-placeholder" role="img" aria-label="QR code image coming soon">
-				<span>QR CODE</span>
-				<small>PLACEHOLDER</small>
-			</div>
-			<p class="qr-note">QR IMAGE TO BE ADDED</p>
-		</aside>
+		<footer>
+			<p>Prepared with care, one cup at a time.</p>
+			<p>日本語で書くなら、なんで翻訳っぽい日本語なの？</p>
+		</footer>
 	</article>
 </main>
 
@@ -116,11 +111,12 @@
 
 	.menu-sheet {
 		position: relative;
-		display: grid;
-		grid-template-columns: minmax(0, 2fr) minmax(15rem, 0.9fr);
-		width: min(100%, 1100px);
-		min-height: min(760px, calc(100vh - 3rem));
+		display: flex;
+		width: min(100%, 210mm);
+		min-height: 297mm;
+		padding: clamp(2.75rem, 6vw, 5rem) clamp(2rem, 5vw, 4.5rem) 2.5rem;
 		overflow: hidden;
+		flex-direction: column;
 		background:
 			radial-gradient(circle at 12% 19%, rgba(64, 56, 42, 0.055) 0 0.7px, transparent 0.9px),
 			radial-gradient(circle at 74% 68%, rgba(255, 255, 255, 0.2) 0 0.8px, transparent 1px),
@@ -144,15 +140,16 @@
 		box-shadow: inset 0 0 70px rgba(84, 75, 59, 0.08);
 	}
 
-	.menu-column {
-		display: flex;
-		min-width: 0;
-		padding: clamp(2.75rem, 6vw, 5rem) clamp(2rem, 5vw, 4.5rem) 2.5rem;
-		flex-direction: column;
+	.top-row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(8rem, 11rem);
+		gap: clamp(2rem, 6vw, 4rem);
+		align-items: center;
+		min-height: 13rem;
 	}
 
 	.menu-header {
-		min-height: 9.5rem;
+		min-width: 0;
 	}
 
 	.eyebrow,
@@ -163,7 +160,6 @@
 	.extra,
 	footer,
 	.qr-note,
-	.qr-number,
 	.qr-placeholder {
 		text-transform: uppercase;
 		letter-spacing: 0.16em;
@@ -198,6 +194,8 @@
 	.menu-grid {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-template-rows: repeat(2, minmax(0, 1fr));
+		flex: 1;
 	}
 
 	.menu-item {
@@ -212,8 +210,7 @@
 		border-left: 1px solid var(--rule);
 	}
 
-	.item-number,
-	.qr-number {
+	.item-number {
 		margin: 0 0 1.5rem;
 		color: var(--muted-ink);
 		font-size: 0.52rem;
@@ -269,22 +266,19 @@
 	.qr-panel {
 		display: flex;
 		min-width: 0;
-		padding: clamp(2.75rem, 6vw, 5rem) clamp(1.75rem, 4vw, 3.5rem) 2.5rem;
+		padding-left: clamp(1.5rem, 4vw, 2.75rem);
 		border-left: 1px solid var(--rule);
 		align-items: center;
 		flex-direction: column;
-	}
-
-	.qr-copy {
-		width: 100%;
+		justify-content: center;
 	}
 
 	.qr-placeholder {
 		position: relative;
 		display: grid;
-		width: min(100%, 13rem);
+		width: min(100%, 9rem);
 		aspect-ratio: 1;
-		margin: auto 0;
+		margin: 0 0 0.85rem;
 		place-content: center;
 		border: 1px dashed var(--rule);
 		color: var(--muted-ink);
@@ -345,25 +339,24 @@
 		}
 
 		.menu-sheet {
-			grid-template-columns: 1fr;
 			min-height: 100vh;
+			padding: 2.5rem 1.5rem;
 			box-shadow: none;
 		}
 
-		.menu-column,
-		.qr-panel {
-			padding: 2.5rem 1.5rem;
+		.top-row {
+			grid-template-columns: minmax(0, 1fr) minmax(7rem, 9rem);
+			gap: 1.5rem;
+			min-height: 11.5rem;
 		}
 
 		.qr-panel {
-			min-height: 24rem;
-			border-top: 1px solid var(--rule);
-			border-left: 0;
+			padding-left: 1.5rem;
 		}
 
 		.qr-placeholder {
-			width: min(65vw, 12rem);
-			margin: 2.5rem auto;
+			width: min(100%, 7.5rem);
+			margin: 0 0 0.7rem;
 		}
 	}
 
@@ -381,8 +374,15 @@
 	}
 
 	@media print {
+		@page {
+			size: A4 portrait;
+			margin: 0;
+		}
+
 		:global(body) {
 			background: white;
+			-webkit-print-color-adjust: exact;
+			print-color-adjust: exact;
 		}
 
 		.menu-shell {
@@ -391,8 +391,10 @@
 		}
 
 		.menu-sheet {
-			width: 297mm;
-			min-height: 210mm;
+			width: 210mm;
+			height: 297mm;
+			min-height: 297mm;
+			padding: 20mm 18mm 14mm;
 			box-shadow: none;
 		}
 	}
