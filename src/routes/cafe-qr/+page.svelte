@@ -230,14 +230,19 @@
 	.item-details {
 		margin-top: 1.65rem;
 		color: var(--muted-ink);
-		font-size: 0.5rem;
+		font-size: clamp(0.72rem, 1.7vw, 0.86rem);
 		font-weight: 500;
-		line-height: 1.8;
+		line-height: 1.55;
+		letter-spacing: 0.09em;
 	}
 
 	.item-details p,
 	footer p {
 		margin: 0;
+	}
+
+	.item-details p + p {
+		margin-top: 0.45rem;
 	}
 
 	.extra {
