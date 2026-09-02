@@ -31,15 +31,16 @@
 
 <svelte:head>
 	<title>Menu</title>
-	<meta name="description" content="A quiet, Japandi-inspired drinks menu." />
+	<meta name="description" content="A contemporary editorial drinks menu." />
 </svelte:head>
 
 <main class="menu-shell">
 	<article class="menu-sheet" aria-labelledby="menu-title">
 		<header class="top-row">
 			<div class="menu-header">
-				<p class="eyebrow">DRINKS</p>
+				<p class="eyebrow">MENU / 01—04</p>
 				<h1 id="menu-title">Menu</h1>
+				<p class="edition">COFFEE · MATCHA · SEASONAL</p>
 			</div>
 
 			<aside class="qr-panel" aria-label="Instagram QR code">
@@ -78,11 +79,9 @@
 <style>
 	:global(body) {
 		margin: 0;
-		color: #25241f;
-		background:
-			radial-gradient(circle at 16% 18%, rgba(255, 255, 255, 0.26), transparent 24%),
-			radial-gradient(circle at 82% 76%, rgba(68, 60, 47, 0.08), transparent 30%), #b9b2a5;
-		font-family: 'Avenir Next', Avenir, 'Helvetica Neue', Arial, sans-serif;
+		color: #181815;
+		background: #d9d9d4;
+		font-family: 'Helvetica Neue', 'Apple SD Gothic Neo', Arial, sans-serif;
 		-webkit-font-smoothing: antialiased;
 	}
 
@@ -92,13 +91,12 @@
 	}
 
 	.menu-shell {
-		--ink: #25241f;
-		--muted-ink: #6f6a5f;
-		--paper: #e8e1d1;
-		--rule: rgba(37, 36, 31, 0.42);
-		--sans: 'Avenir Next', Avenir, 'Helvetica Neue', Arial, sans-serif;
-		--serif:
-			'Iowan Old Style', Baskerville, 'Times New Roman', 'YuMincho', 'Hiragino Mincho ProN', serif;
+		--ink: #181815;
+		--muted-ink: #66655f;
+		--paper: #f7f6f0;
+		--rule: #c8c6bc;
+		--accent: #a60072;
+		--sans: 'Helvetica Neue', 'Apple SD Gothic Neo', Arial, sans-serif;
 		min-height: 100vh;
 		display: grid;
 		place-items: center;
@@ -114,17 +112,9 @@
 		padding: clamp(2.75rem, 6vw, 5rem) clamp(2rem, 5vw, 4.5rem) 2.5rem;
 		overflow: hidden;
 		flex-direction: column;
-		background:
-			radial-gradient(circle at 12% 19%, rgba(64, 56, 42, 0.055) 0 0.7px, transparent 0.9px),
-			radial-gradient(circle at 74% 68%, rgba(255, 255, 255, 0.2) 0 0.8px, transparent 1px),
-			linear-gradient(104deg, rgba(255, 255, 255, 0.13), transparent 31%, rgba(52, 45, 32, 0.035)),
-			var(--paper);
-		background-size:
-			7px 7px,
-			11px 11px,
-			auto,
-			auto;
-		box-shadow: 0 28px 75px rgba(57, 51, 43, 0.3);
+		border-radius: 3px;
+		background: var(--paper);
+		box-shadow: 0 24px 60px rgba(35, 35, 31, 0.18);
 	}
 
 	.menu-sheet::before {
@@ -133,23 +123,35 @@
 		inset: 0;
 		z-index: 2;
 		pointer-events: none;
-		border: 1px solid rgba(255, 255, 255, 0.3);
-		box-shadow: inset 0 0 70px rgba(84, 75, 59, 0.08);
+		border: 1px solid rgba(24, 24, 21, 0.08);
 	}
 
 	.top-row {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) minmax(8rem, 11rem);
 		gap: clamp(2rem, 6vw, 4rem);
-		align-items: center;
+		align-items: end;
 		min-height: 13rem;
 	}
 
 	.menu-header {
+		position: relative;
 		min-width: 0;
+		padding-left: 1.15rem;
+	}
+
+	.menu-header::before {
+		content: '';
+		position: absolute;
+		top: 0.15rem;
+		bottom: 0.15rem;
+		left: 0;
+		width: 3px;
+		background: var(--accent);
 	}
 
 	.eyebrow,
+	.edition,
 	.item-number,
 	.item-details,
 	.extra,
@@ -159,23 +161,33 @@
 	}
 
 	.eyebrow {
-		margin: 0 0 1rem;
-		font-size: 0.58rem;
-		font-weight: 600;
+		margin: 0 0 1.2rem;
+		color: var(--accent);
+		font-size: 0.57rem;
+		font-weight: 700;
+		letter-spacing: 0.22em;
 	}
 
 	h1 {
 		margin: 0;
-		font-family: var(--serif);
-		font-size: clamp(3.5rem, 7vw, 6rem);
-		font-weight: 400;
-		letter-spacing: -0.055em;
-		line-height: 0.9;
+		font-family: var(--sans);
+		font-size: clamp(3.6rem, 7vw, 5.8rem);
+		font-weight: 650;
+		letter-spacing: -0.075em;
+		line-height: 0.82;
+		text-transform: uppercase;
+	}
+
+	.edition {
+		margin: 1.35rem 0 0;
+		color: var(--muted-ink);
+		font-size: 0.46rem;
+		font-weight: 600;
 	}
 
 	.rule {
-		height: 1px;
-		background: var(--rule);
+		height: 2px;
+		background: var(--ink);
 	}
 
 	.menu-grid {
@@ -187,38 +199,40 @@
 
 	.menu-item {
 		min-height: 15rem;
-		padding: 2rem 2rem 1.75rem 0;
+		padding: 2.25rem 2.25rem 2rem 0;
 		border-bottom: 1px solid var(--rule);
 	}
 
 	.menu-item:nth-child(even) {
 		padding-right: 0;
-		padding-left: 2rem;
+		padding-left: 2.25rem;
 		border-left: 1px solid var(--rule);
 	}
 
 	.item-number {
-		margin: 0 0 1.5rem;
-		color: var(--muted-ink);
-		font-size: 0.52rem;
+		margin: 0 0 1.8rem;
+		color: var(--accent);
+		font-size: 0.55rem;
+		font-weight: 700;
 	}
 
 	h2 {
 		max-width: 13ch;
 		margin: 0;
-		font-family: var(--serif);
-		font-size: clamp(1.25rem, 2.6vw, 1.85rem);
-		font-weight: 400;
+		font-family: var(--sans);
+		font-size: clamp(1.2rem, 2.5vw, 1.72rem);
+		font-weight: 650;
 		letter-spacing: -0.025em;
-		line-height: 1.05;
+		line-height: 1;
 		text-transform: uppercase;
 	}
 
 	.item-details {
-		margin-top: 1.5rem;
+		margin-top: 1.65rem;
 		color: var(--muted-ink);
-		font-size: 0.49rem;
-		line-height: 1.75;
+		font-size: 0.5rem;
+		font-weight: 500;
+		line-height: 1.8;
 	}
 
 	.item-details p,
@@ -228,18 +242,21 @@
 
 	.extra {
 		display: inline-block;
-		margin: 1rem 0 0;
-		padding: 0.4rem 0.58rem;
-		border: 1px solid var(--rule);
-		border-radius: 999px;
-		font-size: 0.43rem;
+		margin: 1.15rem 0 0;
+		padding: 0.43rem 0.62rem;
+		border: 1px solid var(--accent);
+		border-radius: 2px;
+		color: var(--accent);
+		font-size: 0.44rem;
+		font-weight: 700;
 	}
 
 	footer {
 		margin-top: auto;
 		padding-top: 2rem;
 		color: var(--muted-ink);
-		font-size: 0.43rem;
+		font-size: 0.45rem;
+		font-weight: 600;
 		line-height: 1.8;
 	}
 
@@ -258,8 +275,10 @@
 		width: min(100%, 10.5rem);
 		aspect-ratio: 1;
 		overflow: hidden;
-		border-radius: 1.2rem;
+		border: 1px solid #e2e0d8;
+		border-radius: 0.9rem;
 		background: #fff;
+		box-shadow: 0 8px 22px rgba(24, 24, 21, 0.08);
 	}
 
 	.qr-image {
@@ -333,6 +352,7 @@
 			height: 297mm;
 			min-height: 297mm;
 			padding: 20mm 18mm 14mm;
+			border-radius: 0;
 			box-shadow: none;
 		}
 	}
