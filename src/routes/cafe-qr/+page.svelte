@@ -42,13 +42,19 @@
 			</div>
 
 			<aside class="qr-panel" aria-label="Instagram QR code">
-				<div class="qr-frame">
+				<a
+					class="qr-frame"
+					href="https://www.instagram.com/espresso.cart/"
+					target="_blank"
+					rel="noreferrer"
+					aria-label="Open @espresso.cart on Instagram"
+				>
 					<img
 						class="qr-image"
 						src={`${base}/cafe-qr/espresso-cart-instagram-qr.jpeg`}
 						alt="Instagram QR code for @espresso.cart"
 					/>
-				</div>
+				</a>
 			</aside>
 		</header>
 
